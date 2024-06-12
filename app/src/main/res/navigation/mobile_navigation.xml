@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/front_page">
+
+    <fragment
+        android:id="@+id/front_page"
+        android:name="com.work37.napnap.ui.frontPage.FrontPageFragment"
+        android:label="@string/front_page"
+        tools:layout="@layout/fragment_frontpage" />
+
+    <fragment
+        android:id="@+id/find_game"
+        android:name="com.work37.napnap.ui.findgame.FindgameFragment"
+        android:label="@string/find_game"
+        tools:layout="@layout/fragment_findgame" />
+
+    <fragment
+        android:id="@+id/community"
+        android:name="com.work37.napnap.ui.community.CommunityFragment"
+        android:label="@string/community"
+        tools:layout="@layout/fragment_community" />
+
+    <fragment
+        android:id="@+id/message"
+        android:name="com.work37.napnap.ui.message.MessageFragment"
+        android:label="@string/message"
+        tools:layout="@layout/fragment_message" />
+    <fragment
+        android:id="@+id/personality"
+        android:name="com.work37.napnap.ui.personality.PersonalityFragment"
+        android:label="@string/personality"
+        tools:layout="@layout/fragment_personality" />
+</navigation>
