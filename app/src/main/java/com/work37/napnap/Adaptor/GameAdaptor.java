@@ -1,6 +1,8 @@
 package com.work37.napnap.Adaptor;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.work37.napnap.GameDetailActivity;
 import com.work37.napnap.R;
 import com.work37.napnap.entity.Game;
 
@@ -37,15 +41,31 @@ public class GameAdaptor extends RecyclerView.Adapter<GameAdaptor.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Game game = gameList.get(position);
 
-        holder.appId.setText(String.valueOf(game.getRank()));
-        holder.appIcon.setImageDrawable(game.getPicture());
-        holder.appName.setText(game.getName());
+        // Set game logo
+        if (!game.getGameIcon().isEmpty()) {
+            Glide.with(context)
+                    .load(game.getGameIcon())
+                    .into(holder.appIcon);
+        }
 
-        holder.itemView.setOnClickListener(v->{
-            Toast.makeText(context,"Clicked"+game.getName(),Toast.LENGTH_SHORT).show();
+        // Set game name
+        holder.appName.setText(game.getGameName());
+
+        // Set game tags (assuming it's a comma-separated string)
+        holder.appTags.setText(game.getTag().toString());
+
+        // Set game score
+        holder.appScore.setText(String.valueOf(game.getGameScore()));
+
+        // Set click listener for check button
+        holder.checkButton.setOnClickListener(v -> {
+            // Implement download functionality here if needed
+            Intent intent = new Intent(context, GameDetailActivity.class);
+            intent.putExtra("Game", game);
+            Log.d("aaabbbccc", game.toString());
+            context.startActivity(intent);
         });
     }
-
     @Override
     public int getItemCount() {
         return gameList.size();
@@ -54,16 +74,17 @@ public class GameAdaptor extends RecyclerView.Adapter<GameAdaptor.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView appIcon;
         TextView appName;
-
-        Button download;
-        TextView appId;
+        TextView appTags;
+        TextView appScore;
+        Button checkButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             appIcon = itemView.findViewById(R.id.appIcon);
             appName = itemView.findViewById(R.id.appName);
-            appId = itemView.findViewById(R.id.appId);
-            download = itemView.findViewById(R.id.download);
+            appTags = itemView.findViewById(R.id.appTags);
+            appScore = itemView.findViewById(R.id.appScore);
+            checkButton = itemView.findViewById(R.id.downloadButton);
         }
     }
 }

@@ -13,7 +13,7 @@
     <string name="username">用户名</string>
     <string name="enter_username">请输入用户名，用户名不为空</string>
     <string name="password">密码</string>
-    <string name="enter_password">请输入密码，密码只包含小写字母和数字，9-12位</string>
+    <string name="enter_password">请输入密码，密码只包含小写字母和数字，6-12位</string>
     <string name="confirm_password">确认密码</string>
     <string name="enter_secondpassword">请再次输入密码</string>
     <string name="register">注册</string>
@@ -27,6 +27,11 @@
     <string name="games">游戏</string>
     <string name="users">用户</string>
     <string name="posts">帖子</string>
-    <string name="baseurl">https://364c-221-4-34-245.ngrok-free.app/</string>
+    <string name="baseurl">http://192.168.241.23:8888/</string>
     <string name="preference_file_key">napnap_sharePreference</string>
+    <string name="invalid_username">账号不能为空</string>
+    <string name="invalid_password">密码应该只包含小写字母和数字，6-12位</string>
+    <string name="welcome">欢迎</string>
+    <string name="clickToLogin">点击头像登录</string>
+    <string name="check">查看</string>
 </resources>

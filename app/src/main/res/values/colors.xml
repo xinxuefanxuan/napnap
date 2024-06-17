@@ -12,4 +12,6 @@
     <color name="blue">#00d3fe</color>
     <color name="tab_indicator">#ff5555</color>
     <color name="grey_text">#999999</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="gray">#808080</color>
 </resources>

@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -39,14 +37,13 @@ public class FrontPageFragment extends Fragment implements View.OnClickListener{
     private GameAdaptor gameAdaptor;
     private List<Game> gameList;
 
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        FrontPageViewModel frontPageViewModel =
-                new ViewModelProvider(this).get(FrontPageViewModel.class);
-
         binding = FragmentFrontpageBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         homeTab = root.findViewById(R.id.home_tab);
+       // sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         homePager=root.findViewById(R.id.home_pager);
 
@@ -62,7 +59,6 @@ public class FrontPageFragment extends Fragment implements View.OnClickListener{
             public Fragment createFragment(int position) {
                 return GameListFragment.newInstance(tabs[position]);
             }
-
             @Override
             public int getItemCount() {
                 return tabs.length;
@@ -70,7 +66,6 @@ public class FrontPageFragment extends Fragment implements View.OnClickListener{
         });
 
         new TabLayoutMediator(homeTab, homePager, (tab, position) -> tab.setText(tabs[position])).attach();
-
         return root;
     }
 

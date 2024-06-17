@@ -2,28 +2,32 @@ package com.work37.napnap.entity;
 
 import android.graphics.drawable.Drawable;
 
-public class Post {
-    private int postId;
-    private int userId;
-    private String title;
-    private String content;
-    private Drawable picture;
-    private String tags;
-    private int likesCount;
-    private int collectCount;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+public class Post implements Serializable { ;
+    private int userId;//发帖用户id
+    private String title;//标题
+    private String content;//内容
+    private List<String> picture;//图片地址
+    private List<String> tag;
+    private int likes;
+    private int collectNum;
+
+//    private Date createDate;
 
     public Post() {
     }
 
-    public Post(int postId,int userId, String title, String content, Drawable picture, String tags, int likesCount, int collectCount) {
-        this.postId = postId;
+    public Post(int userId, String title, String content, List<String> picture, List<String> tag, int likes, int collectNum) {
         this.userId = userId;
         this.title = title;
         this.content = content;
         this.picture = picture;
-        this.tags = tags;
-        this.likesCount = likesCount;
-        this.collectCount = collectCount;
+        this.tag = tag;
+        this.likes = likes;
+        this.collectNum = collectNum;
     }
 
     public int getUserId() {
@@ -50,35 +54,48 @@ public class Post {
         this.content = content;
     }
 
-    public Drawable getPicture() {
+    public List<String> getPicture() {
         return picture;
     }
 
-    public void setPicture(Drawable picture) {
+    public void setPicture(List<String> picture) {
         this.picture = picture;
     }
 
-    public String getTags() {
-        return tags;
+    public List<String> getTag() {
+        return tag;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setTag(List<String> tag) {
+        this.tag = tag;
     }
 
-    public int getLikesCount() {
-        return likesCount;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setLikesCount(int likesCount) {
-        this.likesCount = likesCount;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
-    public int getCollectCount() {
-        return collectCount;
+    public int getCollectNum() {
+        return collectNum;
     }
 
-    public void setCollectCount(int collectCount) {
-        this.collectCount = collectCount;
+    public void setCollectNum(int collectNum) {
+        this.collectNum = collectNum;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "userId=" + userId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", picture=" + picture +
+                ", tag=" + tag +
+                ", likes=" + likes +
+                ", collectNum=" + collectNum +
+                '}';
     }
 }

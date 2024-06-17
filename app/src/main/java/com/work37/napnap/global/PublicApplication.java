@@ -3,6 +3,8 @@ package com.work37.napnap.global;
 import android.app.Application;
 import android.content.Context;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.work37.napnap.ui.userlogin_register.User;
 import com.work37.napnap.ui.userlogin_register.UserDatabase;
 
@@ -13,7 +15,7 @@ public class PublicApplication extends Application {
 
     private static UserDatabase userDatabase;
 
-    private static User currentUser;
+    private static User currentUser = null;
 
     public static Context getInstance() {
         return mContext;
@@ -25,7 +27,6 @@ public class PublicApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         userDatabase = UserDatabase.getInstance(this);
-
     }
 
     public static Context getContext() {

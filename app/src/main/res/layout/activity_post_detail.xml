@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/post_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Post Title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/post_detail_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Post Content"
+        android:paddingBottom="8dp"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/post_detail_time"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Post Time"-->
+<!--        android:paddingBottom="8dp"/>-->
+
+    <TextView
+        android:id="@+id/post_detail_likes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Likes"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/post_detail_collect_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Collect Number"
+        android:paddingBottom="8dp"/>
+
+    <ImageView
+        android:id="@+id/post_detail_picture"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+</LinearLayout>
