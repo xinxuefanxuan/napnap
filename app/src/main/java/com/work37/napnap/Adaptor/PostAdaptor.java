@@ -35,6 +35,7 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = postList.get(position);
+
         holder.postTitle.setText(post.getTitle());
         holder.postContent.setText(post.getContent());
         // Load other post details

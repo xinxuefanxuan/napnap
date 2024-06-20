@@ -75,7 +75,6 @@ public class LoginToDataSource {
                         MediaType.get("application/json; charset=utf-8")
                 );
 
-//                OkHttpClient okHttpClient = new OkHttpClient();
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
                         .cookieJar(new PersistentCookieJar(context))
                         .build();

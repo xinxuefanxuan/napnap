@@ -1,6 +1,7 @@
 package com.work37.napnap.ui.community;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,13 @@ public class CommunityFragment extends Fragment {
             tagFilterPostListFragment = (TagFilterPostListFragment) getChildFragmentManager().findFragmentById(R.id.recyclerView1);
         }
         setupCategoryButtons();
+        binding.fabAddPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(),AddPostActivity.class);
+                startActivity(intent);
+            }
+        });
         return root;
     }
     private void setupCategoryButtons() {

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.community.AddPostActivity">
+
+    <!-- 白色框中的加号按钮 -->
+    <LinearLayout
+        android:id="@+id/select_image_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_add_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/addimage" />
+
+    </LinearLayout>
+
+    <!-- 文章标题输入框 -->
+    <EditText
+        android:id="@+id/edit_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="文章标题"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/select_image_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_default="spread" />
+
+    <!-- 正文输入框 -->
+    <EditText
+        android:id="@+id/edit_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:hint="输入正文内容"
+        android:gravity="top"
+        android:padding="16dp"
+        android:inputType="textMultiLine"
+        app:layout_constraintTop_toBottomOf="@id/edit_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tags_scrollview"
+        app:layout_constraintHeight_default="spread" />
+
+    <!-- 标签选择区域 -->
+    <HorizontalScrollView
+        android:id="@+id/tags_scrollview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/edit_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btn_submit">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <!-- 标签按钮 -->
+            <Button
+                android:id="@+id/btn_technology"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="技术"
+                 />
+
+            <Button
+                android:id="@+id/btn_culture"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="文化"
+                 />
+
+            <Button
+                android:id="@+id/btn_entertainment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="娱乐" />
+
+            <Button
+                android:id="@+id/btn_food"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="美食" />
+
+            <Button
+                android:id="@+id/btn_education"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="教育" />
+
+            <Button
+                android:id="@+id/btn_game"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="游戏" />
+
+            <Button
+                android:id="@+id/btn_health"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="健康" />
+
+            <Button
+                android:id="@+id/btn_news"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="新闻" />
+
+            <Button
+                android:id="@+id/btn_sports"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="运动" />
+
+            <Button
+                android:id="@+id/btn_travel"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:text="旅游" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- 提交按钮 -->
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="提交"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_default="spread" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
