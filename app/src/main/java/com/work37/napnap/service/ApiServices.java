@@ -1,7 +1,7 @@
 package com.work37.napnap.service;
 
 import com.work37.napnap.Game.GameRequest;
-import com.work37.napnap.Game.GameResponse;
+import com.work37.napnap.ui.search.GameResponse;
 import com.work37.napnap.global.GlobalResponse;
 
 import retrofit2.Call;

@@ -1,4 +1,4 @@
-package com.work37.napnap.Game;
+package com.work37.napnap.ui.search;
 
 import com.work37.napnap.entity.Game;
 

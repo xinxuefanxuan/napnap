@@ -2,6 +2,8 @@ package com.work37.napnap.ui.personality;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.work37.napnap.databinding.FragmentPersonalityBinding;
 import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.ui.userlogin_register.LoginActivity;
@@ -64,6 +67,17 @@ public class PersonalityFragment extends Fragment {
             personalityViewModel.setUserAccount(user.getUid());
             personalityViewModel.setFollowingCount(user.getFollowNum());
             personalityViewModel.setFollowersCount(user.getFanNum());
+            personalityViewModel.setUserAvatar(user.getUserAvatar());
+            binding.userAccount.setText(String.valueOf(user.getUid()));
+            binding.username.setText(user.getUsername());
+            binding.followersCount.setText("粉丝:"+user.getFanNum());
+            binding.followingCount.setText("关注:"+user.getFollowNum());
+            // 确保在 UI 线程中进行 Glide 加载操作
+            new Handler(Looper.getMainLooper()).post(() -> {
+                Glide.with(binding.userAvatar.getContext())
+                        .load(user.getUserAvatar())
+                        .into(binding.userAvatar);
+            });
             binding.btnCollectionApp.setEnabled(true);
             binding.btnCollectionPost.setEnabled(true);
             binding.btnPost.setEnabled(true);

@@ -6,7 +6,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Post implements Serializable { ;
+public class Post implements Serializable {
+
+    private int id;//帖子id
     private int userId;//发帖用户id
     private String title;//标题
     private String content;//内容
@@ -20,7 +22,8 @@ public class Post implements Serializable { ;
     public Post() {
     }
 
-    public Post(int userId, String title, String content, List<String> picture, List<String> tag, int likes, int collectNum) {
+    public Post(int id,int userId, String title, String content, List<String> picture, List<String> tag, int likes, int collectNum) {
+        this.id = id;
         this.userId = userId;
         this.title = title;
         this.content = content;
@@ -86,10 +89,19 @@ public class Post implements Serializable { ;
         this.collectNum = collectNum;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
-                "userId=" + userId +
+                "id=" + id +
+                ", userId=" + userId +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", picture=" + picture +

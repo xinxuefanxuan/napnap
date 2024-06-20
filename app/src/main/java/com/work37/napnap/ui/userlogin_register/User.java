@@ -11,8 +11,10 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 @Entity
-public class User implements Cloneable{
+public class User implements Cloneable, Serializable {
 
     @PrimaryKey
     @NonNull

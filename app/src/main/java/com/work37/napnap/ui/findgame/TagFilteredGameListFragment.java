@@ -1,27 +1,27 @@
-package com.work37.napnap.ui.personality;
+package com.work37.napnap.ui.findgame;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.ImageButton;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.GameAdaptor;
 import com.work37.napnap.Game.GameRequest;
-import com.work37.napnap.ui.search.GameResponse;
-import com.work37.napnap.R;
+import com.work37.napnap.databinding.FragmentTagfilteredGamelistBinding;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;
-import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.UrlConstant;
+import com.work37.napnap.ui.search.GameResponse;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,33 +31,47 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class CollectedAppsActivity extends PublicActivity {
+public class TagFilteredGameListFragment extends Fragment {
+    private FragmentTagfilteredGamelistBinding binding;
+    private static final String ARG_TAGS = "tags";
+    private List<String> tags;
     private RecyclerView recyclerView;
     private GameAdaptor gameAdaptor;
-    private List<Game> collectedGameList;
+    private List<Game> gameListA;
     private boolean isLoading = false;
     private int currentPage = 1;
     private int pageSize = 10;
     private boolean isLastPage = false;
 
-    private boolean isFirstLoad = true;
+    public static TagFilteredGameListFragment newInstance(List<String> tags) {
+        TagFilteredGameListFragment fragment = new TagFilteredGameListFragment();
+        Bundle args = new Bundle();
+        args.putStringArrayList(ARG_TAGS, new ArrayList<>(tags));
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collected_apps);
+        if (getArguments() != null) {
+            tags = getArguments().getStringArrayList(ARG_TAGS);
+        }
+    }
 
-        recyclerView = findViewById(R.id.recycler_view);
-        ImageButton backButton = findViewById(R.id.backButton);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // Set up back button
-        backButton.setOnClickListener(v -> finish());
+        binding = FragmentTagfilteredGamelistBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        recyclerView =binding.recyclerView;
 
         // Initialize game list and adapter
-        collectedGameList = new ArrayList<>();
-        gameAdaptor = new GameAdaptor(this, collectedGameList);
+        gameListA = new ArrayList<>();
+        gameAdaptor = new GameAdaptor(getContext(), gameListA);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(gameAdaptor);
 
         // Add scroll listener to RecyclerView for pagination
@@ -66,89 +80,72 @@ public class CollectedAppsActivity extends PublicActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == collectedGameList.size() - 1 && !isLoading && !isLastPage) {
+                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == gameListA.size() - 1 && !isLoading && !isLastPage) {
                     currentPage++;
-                    try {
-                        fetchCollectedGames();
-                    } catch (IOException | JSONException e) {
-                        throw new RuntimeException(e);
-                    }
+                    fetchGameData();
                 }
             }
         });
-
         // Fetch initial data
-        try {
-            fetchCollectedGames();
-        } catch (IOException | JSONException e) {
-            throw new RuntimeException(e);
-        }
+        fetchGameData();
+
+        return root;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        super.onResume();
-        if (!isFirstLoad) {
-            refreshGameList();
-        } else {
-            isFirstLoad = false;
-        }
+    public void updateTags(List<String> tags) {
+        this.tags = tags;
+        refreshGameList();
     }
 
     private void refreshGameList() {
         currentPage = 1;
         isLastPage = false;
-        collectedGameList.clear();
-        gameAdaptor.notifyDataSetChanged();
-        try {
-            fetchCollectedGames();
-        } catch (IOException | JSONException e) {
-            throw new RuntimeException(e);
-        }
+        gameListA.clear();
+        fetchGameData();
+//        gameAdaptor.notifyDataSetChanged();
     }
 
-    private void fetchCollectedGames() throws IOException, JSONException {
+    private void fetchGameData() {
         isLoading = true;
 
+        // Create Retrofit instance
         new Thread(() -> {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                    .cookieJar(new PersistentCookieJar(getContext()))
                     .build();
-
+            // Create request
             GameRequest gameRequest = new GameRequest();
             gameRequest.setCurrent(currentPage);
             gameRequest.setPageSize(pageSize);
-            gameRequest.setSortField("");
+            gameRequest.setSearchText("");
+            gameRequest.setSortField(""); // Replace with actual sort field if needed
+            gameRequest.setTagList(tags);
+
             Gson gson = new Gson();
             String json = gson.toJson(gameRequest);
-
 
             RequestBody requestBody = RequestBody.create(
                     json,
                     MediaType.get("application/json; charset=utf-8")
             );
             Request request = new Request.Builder()
-                    .url(UrlConstant.baseUrl + "api/game/listAllGameByUserCollect")
+                    .url(UrlConstant.baseUrl + "api/game/listAllGameBySearch")
                     .post(requestBody)
                     .build();
-            Response response;
-            String responseBody;
+            Response response = null;
+            String responseBody = null;
             try {
                 response = okHttpClient.newCall(request).execute();
                 responseBody = response.body().string();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
             GameResponse gameResponse = gson.fromJson(responseBody, GameResponse.class);
-
             if (gameResponse.getCode() == 0) {
                 List<Game> records = gameResponse.getData().getRecords();
-
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    collectedGameList.addAll(records);
-                    gameAdaptor.notifyDataSetChanged();
+                    gameListA.addAll(records);
+                    gameAdaptor.notifyDataSetChanged(); // 更新Adapter数据
                     isLoading = false;
                     if (records.size() < pageSize) {
                         isLastPage = true;

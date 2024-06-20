@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.community.CommunityFragment">
+    tools:context=".ui.findgame.FindgameFragment">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -16,14 +16,15 @@
             android:id="@+id/tv_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="标签"
+            android:text="分类"
             android:textSize="20sp"
             android:padding="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:context=".ui.findgame.FindgameFragment">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,32 +33,32 @@
                 android:weightSum="4">
 
                 <Button
-                    android:id="@+id/btn_technology"
+                    android:id="@+id/btn_all"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="技术" />
+                    android:text="全部" />
 
                 <Button
-                    android:id="@+id/btn_amuse"
+                    android:id="@+id/btn_adventure"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="娱乐" />
+                    android:text="冒险" />
 
                 <Button
-                    android:id="@+id/btn_sports"
+                    android:id="@+id/btn_anime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="体育" />
+                    android:text="二次元" />
 
                 <Button
-                    android:id="@+id/btn_health"
+                    android:id="@+id/btn_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="健康" />
+                    android:text="卡牌" />
             </LinearLayout>
 
             <LinearLayout
@@ -67,32 +68,32 @@
                 android:weightSum="4">
 
                 <Button
-                    android:id="@+id/btn_education"
+                    android:id="@+id/btn_shoot"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="教育" />
+                    android:text="射击" />
 
                 <Button
-                    android:id="@+id/btn_new"
+                    android:id="@+id/btn_test"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="新闻" />
+                    android:text="测试" />
 
                 <Button
-                    android:id="@+id/btn_game"
+                    android:id="@+id/btn_single"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="游戏" />
+                    android:text="单机" />
 
                 <Button
-                    android:id="@+id/btn_travel"
+                    android:id="@+id/btn_action"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="旅游" />
+                    android:text="动作" />
             </LinearLayout>
 
             <LinearLayout
@@ -100,19 +101,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="4">
+
                 <Button
-                    android:id="@+id/btn_food"
+                    android:id="@+id/btn_nap"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="美食" />
+                    android:text="休闲" />
+
                 <!-- 添加空白视图来补全最后一行的布局，使其与其他行对齐 -->
-                <Button
-                    android:id="@+id/btn_cultrue"
+                <View
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="文化" />
+                    android:layout_weight="1" />
 
                 <View
                     android:layout_width="0dp"
@@ -138,4 +139,5 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

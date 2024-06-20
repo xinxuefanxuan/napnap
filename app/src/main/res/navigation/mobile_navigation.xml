@@ -15,7 +15,7 @@
         android:id="@+id/find_game"
         android:name="com.work37.napnap.ui.findgame.FindgameFragment"
         android:label="@string/find_game"
-        tools:layout="@layout/fragment_findgame" />
+        tools:layout="@layout/fragment_find_game" />
 
     <fragment
         android:id="@+id/community"

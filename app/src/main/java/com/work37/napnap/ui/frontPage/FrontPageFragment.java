@@ -17,9 +17,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.work37.napnap.Adaptor.GameAdaptor;
 import com.work37.napnap.GameListFragment;
 import com.work37.napnap.R;
-import com.work37.napnap.SearchActivity;
 import com.work37.napnap.databinding.FragmentFrontpageBinding;
 import com.work37.napnap.entity.Game;
+import com.work37.napnap.ui.search.SearchActivity;
+
 
 import java.util.List;
 

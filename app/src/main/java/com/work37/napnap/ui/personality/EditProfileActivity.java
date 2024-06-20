@@ -1,11 +1,17 @@
 package com.work37.napnap.ui.personality;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +21,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
 
 import com.bumptech.glide.Glide;
-import com.work37.napnap.R;
 import com.work37.napnap.databinding.ActivityEditProfileBinding;
+import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.global.UrlConstant;
@@ -32,13 +35,21 @@ import com.work37.napnap.ui.userlogin_register.User;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.Arrays;
+
+import javax.net.ssl.X509TrustManager;
+
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class EditProfileActivity extends PublicActivity {
+
     private ActivityEditProfileBinding binding;
     private ImageView userAvatar;
     private ImageView back;
@@ -50,7 +61,9 @@ public class EditProfileActivity extends PublicActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
     private static final int PICK_IMAGE_REQUEST = 1;
+
     private Uri selectedImageUri;
+    private String uploadedImageUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +87,7 @@ public class EditProfileActivity extends PublicActivity {
             disableEditing();
         }
 
+
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -82,6 +96,7 @@ public class EditProfileActivity extends PublicActivity {
                         if (selectedImageUri != null) {
                             userAvatar.setImageURI(selectedImageUri);
                             this.selectedImageUri = selectedImageUri;
+                            uploadAvatar(selectedImageUri);
                         }
                     }
                 });
@@ -102,6 +117,8 @@ public class EditProfileActivity extends PublicActivity {
             }
         });
     }
+
+
 
     private void disableEditing() {
         editUserName.setActivated(false);
@@ -130,59 +147,6 @@ public class EditProfileActivity extends PublicActivity {
         pickImageLauncher.launch(intent);
     }
 
-
-//    private void sendUpdateRequest() {
-//        new Thread(() -> {
-//            OkHttpClient client = new OkHttpClient();
-//            MultipartBody.Builder builder = new MultipartBody.Builder()
-//                    .setType(MultipartBody.FORM)
-//                    .addFormDataPart("userName", currentUser.getUsername())
-//                    .addFormDataPart("userProfile", currentUser.getProfile());
-//
-//            // 如果有头像更新
-//            if (selectedImageUri != null) {
-//                String filePath = getPathFromUri(selectedImageUri);
-//                File file = new File(filePath);
-//                builder.addFormDataPart("file", file.getName(), RequestBody.create(file, MediaType.parse("image/*")));
-//            }
-//
-//            RequestBody requestBody = builder.build();
-//            Request request = new Request.Builder()
-//                    .url(UrlConstant.baseUrl + "/api/user/updateProfile")
-//                    .put(requestBody)
-//                    .build();
-//
-//            try {
-//                Response response = client.newCall(request).execute();
-//                String responseBody = response.body().string();
-//                JSONObject jsonObject = new JSONObject(responseBody);
-//                int code = jsonObject.getInt("code");
-//                String message = jsonObject.getString("message");
-//                if (code == 0) {
-//                    // 更新成功
-//                    JSONObject data = jsonObject.getJSONObject("data");
-//                    currentUser.setUserAvatar(data.getString("userAvatar"));
-//                    currentUser.setUsername(data.getString("userName"));
-//                    currentUser.setProfile(data.getString("userProfile"));
-//                    runOnUiThread(() -> {
-//                        Toast.makeText(getApplicationContext(), "成功更新资料", Toast.LENGTH_SHORT).show();
-//                        disableEditing();
-//                    });
-//                } else {
-//                    // 更新失败
-//                    runOnUiThread(() -> {
-//                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-//                    });
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                runOnUiThread(() -> {
-//                    Toast.makeText(getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
-//                });
-//            }
-//        }).start();
-//    }
-
     //获取图图片路径
     private String getPathFromUri(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
@@ -197,7 +161,6 @@ public class EditProfileActivity extends PublicActivity {
         return null;
     }
 
-
     private void loadImage(Uri selectedImageUri) {
         // 使用 Glide 或其他图片加载库加载图像到 ImageView
         ImageView imageView = userAvatar;
@@ -205,9 +168,6 @@ public class EditProfileActivity extends PublicActivity {
                 .load(selectedImageUri)
                 .into(imageView);
     }
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -242,23 +202,24 @@ public class EditProfileActivity extends PublicActivity {
     private void sendUpdateRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("userName", currentUser.getUsername());
-            json.put("userProfile", currentUser.getProfile());
+            json.put("userName", editUserName.getText());
+            json.put("userProfile", editUserProfile.getText());
             // 如果有头像更新
-            if (selectedImageUri != null) {
-                // 上传头像并获取URL，这里省略了上传逻辑
-                String avatarUrl = uploadAvatar(selectedImageUri);
-                json.put("userAvatar", avatarUrl);
+            if (uploadedImageUrl != null) {
+                json.put("userAvatar", uploadedImageUrl);
+            } else {
+                json.put("userAvatar", currentUser.getUserAvatar());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .cookieJar(new PersistentCookieJar(getApplicationContext())).build();
             RequestBody requestBody = RequestBody.create(json.toString(), MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url(UrlConstant.baseUrl + "/api/user/updateProfile")
+                    .url(UrlConstant.baseUrl + "/api/user/updateUserInfo")
                     .put(requestBody)
                     .build();
 
@@ -272,6 +233,13 @@ public class EditProfileActivity extends PublicActivity {
                     // 更新成功
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), "成功更新资料", Toast.LENGTH_SHORT).show();
+                        User user = PublicApplication.getCurrentUser();
+                        user.setProfile(editUserProfile.getText().toString());
+                        user.setUsername(editUserName.getText().toString());
+                        if(uploadedImageUrl!=null){
+                            user.setUserAvatar(uploadedImageUrl);
+                        }
+                        PublicApplication.setCurrentUser(user);
                     });
                 } else {
                     // 更新失败
@@ -288,9 +256,42 @@ public class EditProfileActivity extends PublicActivity {
         }).start();
     }
 
-    private String uploadAvatar(Uri imageUri) {
-        // 上传头像并返回URL，这里可以调用上传图片的API
-        // 示例代码，实际需要实现上传逻辑
-        return new String("");
+    private void uploadAvatar(Uri imageUri) {
+        new Thread(() -> {
+            try {
+                String imagePath = getPathFromUri(imageUri);
+                File imageFile = new File(imagePath);
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getApplicationContext())).build();
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("file", imageFile.getName(),
+                                RequestBody.create(imageFile, MediaType.get("image/*")))
+                        .build();
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl + "api/image/upload")
+                        .post(requestBody)
+                        .build();
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                JSONObject jsonObject = new JSONObject(responseBody);
+                int code = jsonObject.getInt("code");
+                if (code == 0) {
+                    uploadedImageUrl = jsonObject.getString("data");  // 假设返回的数据中包含头像 URL
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "头像上传成功", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "头像上传失败", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), "头像上传失败", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }).start();
     }
 }

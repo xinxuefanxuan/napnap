@@ -3,79 +3,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".SearchActivity">
-
-    <!-- Top Bar -->
-    <LinearLayout
-        android:id="@+id/top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        android:padding="8dp">
-
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_back_ios_24"
-            android:contentDescription="@string/back" />
-
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/search"
-            android:padding="8dp" />
-
-        <Button
-            android:id="@+id/btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/searchButton" />
-    </LinearLayout>
-
-    <!-- 本地记录 -->
-    <TextView
-        android:id="@+id/tv_history"
-        android:layout_below="@id/top_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/history"
-        android:padding="8dp" />
+    tools:context=".ui.search.SearchActivity">
 
     <LinearLayout
-        android:id="@+id/ll_history"
-        android:layout_below="@id/tv_history"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
-        <!-- Dynamically add historical searches here -->
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Search Bar -->
+        <LinearLayout
+            android:id="@+id/searchBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:src="@drawable/baseline_arrow_back_ios_24"
+                android:contentDescription="@string/back" />
+
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/search"
+                android:padding="8dp" />
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/searchButton" />
+        </LinearLayout>
+
+        <!-- Tabs -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/search_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- ViewPager for Tabs -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/search_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
-    <!-- 搜索结果按类型展示 -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/home_tab"
-        android:layout_width="200dp"
-        android:layout_gravity="left"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/tab_margin_bottom"
-        app:tabTextAppearance="@style/TabLayoutTextStyle"
-        app:tabSelectedTextColor="@color/black"
-        app:tabTextColor="@color/grey_text"
-        app:tabBackground="@color/white"
-        app:tabRippleColor="@color/white"
-        app:tabIndicatorColor="@color/tab_indicator"
-        app:tabIndicatorFullWidth="false"/>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/home_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:fitsSystemWindows="true"/>
 </RelativeLayout>

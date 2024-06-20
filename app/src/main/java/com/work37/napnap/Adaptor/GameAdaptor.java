@@ -52,7 +52,9 @@ public class GameAdaptor extends RecyclerView.Adapter<GameAdaptor.ViewHolder> {
         holder.appName.setText(game.getGameName());
 
         // Set game tags (assuming it's a comma-separated string)
-        holder.appTags.setText(game.getTag().toString());
+        List<String> tags = game.getTag(); // 假设返回的是字符串数组 ["冒险", "二次元"]
+        String formattedTags = formatTags(tags); // 调用自定义方法格式化标签
+        holder.appTags.setText(formattedTags);
 
         // Set game score
         holder.appScore.setText(String.valueOf(game.getGameScore()));
@@ -65,6 +67,14 @@ public class GameAdaptor extends RecyclerView.Adapter<GameAdaptor.ViewHolder> {
             Log.d("aaabbbccc", game.toString());
             context.startActivity(intent);
         });
+    }
+
+    private String formatTags(List<String> tags) {
+        StringBuilder sb = new StringBuilder();
+        for (String tag : tags) {
+            sb.append("#").append(tag).append("  "); // 添加 # 前缀和空格
+        }
+        return sb.toString().trim(); // 去除末尾多余的空格
     }
     @Override
     public int getItemCount() {

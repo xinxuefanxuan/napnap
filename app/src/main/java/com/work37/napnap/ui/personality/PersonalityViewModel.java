@@ -16,6 +16,8 @@ public class PersonalityViewModel extends ViewModel {
     private final MutableLiveData<Integer> followingCount = new MutableLiveData<>();
     private final MutableLiveData<Integer> followersCount = new MutableLiveData<>();
 
+    private final MutableLiveData<String> userAvatar = new MutableLiveData<>();
+
     private final personalityRepository personalityRepository;
     private final MutableLiveData<Boolean> logoutResult = new MutableLiveData<>();
 
@@ -40,6 +42,7 @@ public class PersonalityViewModel extends ViewModel {
         userAccount.postValue(user.getUid());
         followingCount.postValue(user.getFollowNum());
         followersCount.postValue(user.getFanNum());
+        userAvatar.postValue(user.getUserAvatar());
     }
 
     public LiveData<String> getUsername() {
@@ -72,6 +75,14 @@ public class PersonalityViewModel extends ViewModel {
 
     public void setFollowersCount(int count) {
         followersCount.postValue(count);
+    }
+
+    public void setUserAvatar(String userAvatar){
+        this.userAvatar.postValue(userAvatar);
+    }
+
+    public MutableLiveData<String> getUserAvatar() {
+        return userAvatar;
     }
 }
 
