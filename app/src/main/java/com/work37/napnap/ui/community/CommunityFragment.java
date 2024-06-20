@@ -56,8 +56,8 @@ public class CommunityFragment extends Fragment {
         binding.btnTechnology.setOnClickListener(v -> {
             toggleTag("技术", binding.btnTechnology);
         });
-        binding.btnCultrue.setOnClickListener(v -> {
-            toggleTag("文化", binding.btnCultrue);
+        binding.btnCulture.setOnClickListener(v -> {
+            toggleTag("文化", binding.btnCulture);
         });
         binding.btnAmuse.setOnClickListener(v -> {
             toggleTag("娱乐", binding.btnAmuse);
@@ -112,7 +112,7 @@ public class CommunityFragment extends Fragment {
         // 更新所有按钮的颜色状态
         binding.tvCategory.setBackgroundColor(selectedTags.isEmpty() ? ContextCompat.getColor(getContext(), R.color.selected_button_color): ContextCompat.getColor(getContext(), R.color.default_button_color));
         updateButtonState(binding.btnTechnology, "技术");
-        updateButtonState(binding.btnCultrue, "文化");
+        updateButtonState(binding.btnCulture, "文化");
         updateButtonState(binding.btnAmuse, "娱乐");
         updateButtonState(binding.btnFood, "美食");
         updateButtonState(binding.btnEducation, "教育");

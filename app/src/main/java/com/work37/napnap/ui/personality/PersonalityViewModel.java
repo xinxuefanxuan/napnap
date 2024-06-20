@@ -10,6 +10,8 @@ import com.work37.napnap.ui.userlogin_register.User;
 
 import org.json.JSONException;
 
+import java.io.IOException;
+
 public class PersonalityViewModel extends ViewModel {
     private final MutableLiveData<String> username = new MutableLiveData<>();
     private final MutableLiveData<Integer> userAccount = new MutableLiveData<>();
@@ -33,7 +35,7 @@ public class PersonalityViewModel extends ViewModel {
         return logoutResult;
     }
 
-    public void logout() throws JSONException {
+    public void logout() throws JSONException, IOException {
         personalityRepository.logout().observeForever(logoutResult::setValue);
     }
 

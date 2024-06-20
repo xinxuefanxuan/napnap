@@ -1,6 +1,8 @@
 package com.work37.napnap.ui.personality;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -8,7 +10,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.work37.napnap.global.PersistentCookieJar;
+import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.global.UrlConstant;
+import com.work37.napnap.ui.userlogin_register.LoginReponse;
+import com.work37.napnap.ui.userlogin_register.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,14 +36,12 @@ public class personalityRepository {
     private final OkHttpClient okHttpClient;
     private Context context;
 
-    private final ExecutorService executorService;//在后台线程中执行网络请求，避免阻塞主线程
 
     private personalityRepository(Context context) {
         this.context = context;
         okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(new PersistentCookieJar(context))
                 .build();
-        this.executorService = Executors.newSingleThreadExecutor();
     }
 
     public static personalityRepository getInstance(Context context) {
@@ -52,29 +55,30 @@ public class personalityRepository {
         return instance;
     }
 
-    public LiveData<Boolean> logout() throws JSONException {
+    public LiveData<Boolean> logout() throws JSONException, IOException {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        executorService.execute(() -> {
-            try {
-                Request request = new Request.Builder()
-                        .url(UrlConstant.baseUrl + "api/user/logout")
-                        .build();
-                Response response = okHttpClient.newCall(request).execute();
-                String responseBody = response.body().string();
-                Log.d("Logout", responseBody);
-                JSONObject jsonObject = new JSONObject(responseBody);
-                int code = jsonObject.getInt("code");
-                String message = jsonObject.getString("message");
-                if (code == 0) {
-                    result.postValue(true);
-                } else {
-                    result.postValue(false);
-                }
-            } catch (IOException | JSONException e) {
-                Log.e("Logout", "Error during logout", e);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cookieJar(new PersistentCookieJar(context))
+                .build();
+        Request request = new Request.Builder()
+                .url(UrlConstant.baseUrl+"api/user/logout")
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        String responseBody = response.body().string();
+        Log.d("aaa",responseBody);
+        JSONObject jsonObject = new JSONObject(responseBody);
+        int code = jsonObject.getInt("code");
+        String message = jsonObject.getString("message");
+        if(code==0){
+            new Handler(Looper.getMainLooper()).post(() -> {
+                result.postValue(true);
+            });
+        }else{
+            new Handler(Looper.getMainLooper()).post(() -> {
                 result.postValue(false);
-            }
-        });
+            });
+        }
         return result;
     }
 

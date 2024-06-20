@@ -23,6 +23,8 @@ import com.work37.napnap.ui.userlogin_register.User;
 
 import org.json.JSONException;
 
+import java.io.IOException;
+
 public class PersonalityFragment extends Fragment {
     private FragmentPersonalityBinding binding;
     private PersonalityViewModel personalityViewModel;
@@ -152,6 +154,8 @@ public class PersonalityFragment extends Fragment {
                     performLogout();
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -200,10 +204,6 @@ public class PersonalityFragment extends Fragment {
             binding.followingCount.setText(String.valueOf(user.getFollowNum()));
             binding.followersCount.setText(String.valueOf(user.getFanNum()));
             binding.viewProfileButton.setEnabled(true);//查看资料按钮不可点击
-//            personalityViewModel.setUsername(user.getUsername());
-//            personalityViewModel.setUserAccount(user.getUid());
-//            personalityViewModel.setFollowingCount(user.getFollowNum());
-//            personalityViewModel.setFollowersCount(user.getFanNum());
             binding.btnCollectionApp.setEnabled(true);
             binding.btnCollectionPost.setEnabled(true);
             binding.btnPost.setEnabled(true);
@@ -213,9 +213,8 @@ public class PersonalityFragment extends Fragment {
             // 可以在这里做其他需要更新的UI操作
         }
     }
-
     //退出登录
-    private void performLogout() throws JSONException {
+    private void performLogout() throws JSONException, IOException {
         personalityViewModel.logout();
     }
     @Override
