@@ -1,5 +1,5 @@
 package com.work37.napnap.global;
 
 public interface UrlConstant {
-    String baseUrl = "https://8f09-223-104-67-143.ngrok-free.app/";
+    String baseUrl = "https://cb76-223-104-76-218.ngrok-free.app/";
 }

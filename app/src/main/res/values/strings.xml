@@ -7,8 +7,8 @@
     <string name="community">社区</string>
     <string name="message">消息</string>
     <string name="personality">我</string>
-    <string name="popular_list">热门榜</string>
-    <string name="highScore_list">高分榜</string>
+    <string name="popular_list">热门</string>
+    <string name="highScore_list">高分</string>
     <string name="high_recommend">推荐</string>
     <string name="username">用户名</string>
     <string name="enter_username">请输入用户名，用户名不为空</string>
@@ -34,4 +34,5 @@
     <string name="welcome">欢迎</string>
     <string name="clickToLogin">点击头像登录</string>
     <string name="check">查看</string>
+    <string name="default_search_content">请输入搜索内容</string>
 </resources>

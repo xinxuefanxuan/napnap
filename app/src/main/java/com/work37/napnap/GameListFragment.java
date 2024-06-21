@@ -71,14 +71,15 @@ public class GameListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_game_list, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        // Initialize game list and adapter
+        //初始化游戏列表和适配器
         gameList = new ArrayList<>();
         gameAdaptor = new GameAdaptor(getContext(), gameList);
 
+        //初始化recyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(gameAdaptor);
 
-        // Add scroll listener to RecyclerView for pagination
+        //为 RecyclerView 添加滚动监听器以实现分页
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -97,7 +98,7 @@ public class GameListFragment extends Fragment {
             }
         });
 
-        // Fetch initial data
+        //获取初始数据
         try {
             if(isFirstLoad){
                 fetchGameData(type);
@@ -142,7 +143,8 @@ public class GameListFragment extends Fragment {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .cookieJar(new PersistentCookieJar(getContext()))
                     .build();
-            // Create request
+
+            //创建请求
             GameRequest gameRequest = new GameRequest();
             gameRequest.setCurrent(currentPage);
             gameRequest.setPageSize(pageSize);
@@ -151,9 +153,11 @@ public class GameListFragment extends Fragment {
             gameRequest.setSortField(sortField);
             gameRequest.setTagList(new ArrayList<>());
 
+            //将请求对象转换为JSON字符串
             Gson gson = new Gson();
             String json = gson.toJson(gameRequest);
 
+            //创建请求体
             RequestBody requestBody = RequestBody.create(
                     json,
                     MediaType.get("application/json; charset=utf-8")
@@ -162,6 +166,8 @@ public class GameListFragment extends Fragment {
                     .url(UrlConstant.baseUrl+"api/game/listAllGameBySearch")
                     .post(requestBody)
                     .build();
+
+            //执行请求
             Response response = null;
             String responseBody = null;
             try {
@@ -170,8 +176,11 @@ public class GameListFragment extends Fragment {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+            //执行响应
             GameResponse gameResponse = gson.fromJson(responseBody, GameResponse.class);
 
+            //处理响应数据
             if (gameResponse.getCode() == 0) {
                 List<Game> records = gameResponse.getData().getRecords();
                 new Handler(Looper.getMainLooper()).post(() -> {

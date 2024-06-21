@@ -10,8 +10,9 @@
     <LinearLayout
         android:id="@+id/tag"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/tv_category"
@@ -36,12 +37,14 @@
                     android:id="@+id/btn_technology"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_weight="1"
                     android:text="技术" />
 
                 <Button
                     android:id="@+id/btn_amuse"
                     android:layout_width="0dp"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="娱乐" />
@@ -49,6 +52,7 @@
                 <Button
                     android:id="@+id/btn_sports"
                     android:layout_width="0dp"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="体育" />
@@ -56,6 +60,7 @@
                 <Button
                     android:id="@+id/btn_health"
                     android:layout_width="0dp"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="健康" />
@@ -71,6 +76,7 @@
                     android:id="@+id/btn_education"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_weight="1"
                     android:text="教育" />
 
@@ -78,12 +84,14 @@
                     android:id="@+id/btn_new"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_weight="1"
                     android:text="新闻" />
 
                 <Button
                     android:id="@+id/btn_game"
                     android:layout_width="0dp"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="游戏" />
@@ -92,6 +100,7 @@
                     android:id="@+id/btn_travel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_weight="1"
                     android:text="旅游" />
             </LinearLayout>
@@ -99,6 +108,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/white_rounded_background"
                 android:orientation="horizontal"
                 android:weightSum="4">
 
@@ -107,12 +117,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/white_rounded_background"
                     android:text="美食" />
                 <!-- 添加空白视图来补全最后一行的布局，使其与其他行对齐 -->
                 <Button
                     android:id="@+id/btn_culture"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/white_rounded_background"
                     android:layout_weight="1"
                     android:text="文化" />
 
@@ -127,13 +139,7 @@
 <!--                    android:layout_weight="1" />-->
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/postlist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
 
         <FrameLayout
             android:id="@+id/recyclerView1"
@@ -151,8 +157,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/addpost"
-        app:layout_constraintBottom_toBottomOf="@+id/postlist"
-        app:layout_constraintEnd_toEndOf="@+id/postlist" />
+        app:layout_constraintBottom_toBottomOf="@+id/tag"
+        app:layout_constraintEnd_toEndOf="@+id/tag" />
 
 
 

@@ -4,7 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F0F0F0"
     tools:context=".ui.community.AddPostActivity">
+
+    <!-- Back Button -->
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:src="@drawable/baseline_arrow_back_ios_24"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- 白色框中的加号按钮 -->
     <LinearLayout
@@ -12,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@android:color/white"
+        android:background="@drawable/white_rounded_background"
         android:orientation="horizontal"
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,7 +36,9 @@
             android:id="@+id/iv_add_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/addimage" />
+            android:src="@drawable/addimage"
+            android:background="@drawable/image_rounded_background"
+            android:padding="16dp" />
 
     </LinearLayout>
 
@@ -34,6 +49,8 @@
         android:layout_height="wrap_content"
         android:hint="文章标题"
         android:padding="16dp"
+        android:background="@drawable/white_rounded_background"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintTop_toBottomOf="@id/select_image_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +64,8 @@
         android:hint="输入正文内容"
         android:gravity="top"
         android:padding="16dp"
+        android:background="@drawable/white_rounded_background"
+        android:layout_margin="16dp"
         android:inputType="textMultiLine"
         app:layout_constraintTop_toBottomOf="@id/edit_title"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,10 +79,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scrollbars="none"
+        android:layout_margin="16dp"
         app:layout_constraintTop_toBottomOf="@id/edit_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_submit">
+        app:layout_constraintBottom_toTopOf="@id/btn_submit">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -74,75 +94,93 @@
             <!-- 标签按钮 -->
             <Button
                 android:id="@+id/btn_technology"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:background="@drawable/button_rounded_background"
                 android:text="技术"
-                 />
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_culture"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:background="@drawable/button_rounded_background"
                 android:text="文化"
-                 />
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_entertainment"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="娱乐" />
+                android:background="@drawable/button_rounded_background"
+                android:text="娱乐"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_food"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="美食" />
+                android:background="@drawable/button_rounded_background"
+                android:text="美食"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_education"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="教育" />
+                android:background="@drawable/button_rounded_background"
+                android:text="教育"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_game"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="游戏" />
+                android:background="@drawable/button_rounded_background"
+                android:text="游戏"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_health"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="健康" />
+                android:background="@drawable/button_rounded_background"
+                android:text="健康"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_news"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="新闻" />
+                android:background="@drawable/button_rounded_background"
+                android:text="新闻"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_sports"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="运动" />
+                android:background="@drawable/button_rounded_background"
+                android:text="运动"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_travel"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="旅游" />
+                android:background="@drawable/button_rounded_background"
+                android:text="旅游"
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -152,6 +190,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="提交"
+        android:background="@drawable/submit_button_background"
+        android:textColor="@android:color/white"
         android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,4 +199,3 @@
         app:layout_constraintWidth_default="spread" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

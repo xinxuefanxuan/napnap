@@ -12,7 +12,10 @@ import com.work37.napnap.global.PersistentCookieJar;
 import okhttp3.OkHttpClient;
 
 public class LoginViewModel extends ViewModel {
+
+    //登陆状态
     private MutableLiveData<LoginState> loginStateMutableLiveData = new MutableLiveData<>();
+    //将登陆回答封装成一个类
     private MutableLiveData<LoginReponse> loginReponseMutableLiveData = new MutableLiveData<>();
     private LoginToDataSource loginToDataSource;
 

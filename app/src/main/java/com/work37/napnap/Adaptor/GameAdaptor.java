@@ -48,8 +48,13 @@ public class GameAdaptor extends RecyclerView.Adapter<GameAdaptor.ViewHolder> {
                     .into(holder.appIcon);
         }
 
-        // Set game name
-        holder.appName.setText(game.getGameName());
+        // Set game name with maximum 10 characters, exceeding parts are replaced with ...
+        String gameName = game.getGameName();
+        if (gameName.length() > 10) {
+            gameName = gameName.substring(0, 10) + "...";
+        }
+        holder.appName.setText(gameName);
+
 
         // Set game tags (assuming it's a comma-separated string)
         List<String> tags = game.getTag(); // 假设返回的是字符串数组 ["冒险", "二次元"]

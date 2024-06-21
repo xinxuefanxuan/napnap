@@ -48,12 +48,16 @@ public class FrontPageFragment extends Fragment implements View.OnClickListener{
 
         homePager=root.findViewById(R.id.home_pager);
 
+        //设定点击事件
         binding.tlbInit.toolbarSearchInit.setOnClickListener(this);
+
+        //初始化标签数组
         tabs=new String[3];
         tabs[0]=new String(getString(R.string.high_recommend));
         tabs[1]=new String(getString(R.string.popular_list));
         tabs[2]=new String(getString(R.string.highScore_list));
 
+        //创建适配器
         homePager.setAdapter(new FragmentStateAdapter(getChildFragmentManager(),getLifecycle()) {
             @NonNull
             @Override
@@ -66,6 +70,7 @@ public class FrontPageFragment extends Fragment implements View.OnClickListener{
             }
         });
 
+        //连接TabLayout,ViewPager2
         new TabLayoutMediator(homeTab, homePager, (tab, position) -> tab.setText(tabs[position])).attach();
         return root;
     }

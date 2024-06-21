@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="0px"
-    android:layout_margin="0px"
-    android:orientation="vertical"
+    android:padding="0dp"
+    android:layout_margin="0dp"
     tools:context=".ui.frontPage.FrontPageFragment">
 
     <include
         android:id="@+id/tlb_init"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        layout="@layout/toolbar_search_init"/>
+        layout="@layout/toolbar_search_init"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/home_tab"
-        android:layout_width="200dp"
-        android:layout_gravity="left"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/tab_margin_bottom"
         app:tabTextAppearance="@style/TabLayoutTextStyle"
         app:tabSelectedTextColor="@color/black"
         app:tabTextColor="@color/grey_text"
-        app:tabBackground="@color/white"
         app:tabRippleColor="@color/white"
         app:tabIndicatorColor="@color/tab_indicator"
-        app:tabIndicatorFullWidth="false"/>
+        app:tabIndicatorFullWidth="false"
+        app:layout_constraintTop_toBottomOf="@id/tlb_init"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/home_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:orientation="horizontal"
-        android:fitsSystemWindows="true"/>
+        app:layout_constraintTop_toBottomOf="@id/home_tab"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

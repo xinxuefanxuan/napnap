@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.work37.napnap.R;
 import com.work37.napnap.databinding.ActivityAddPostBinding;
 import com.work37.napnap.global.PersistentCookieJar;
@@ -30,7 +33,9 @@ import com.work37.napnap.global.UrlConstant;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -42,7 +47,10 @@ import okhttp3.Response;
 
 public class AddPostActivity extends PublicActivity {
     private ActivityAddPostBinding binding;
+    private LinearLayout selectImageLayout;
     private Uri imageUri;
+
+    private ImageView backButton;
     //图片地址列表
     private ArrayList<String> picturePaths = new ArrayList<>();
     //标签列表
@@ -76,6 +84,7 @@ public class AddPostActivity extends PublicActivity {
         protected void onPostExecute(String result) {
             if (result != null) {
                 picturePaths.add(result);
+                addImageToLayout(result);
                 Toast.makeText(getApplicationContext(), "头像上传成功", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "头像上传失败", Toast.LENGTH_SHORT).show();
@@ -95,7 +104,11 @@ public class AddPostActivity extends PublicActivity {
 
         editContent = binding.editContent;
 
+        backButton = binding.backButton;
+
         Button butSubmit = binding.btnSubmit;
+
+        selectImageLayout = binding.selectImageLayout;
 
         checkPermissions();
         // 添加图片按钮点击事件
@@ -106,6 +119,8 @@ public class AddPostActivity extends PublicActivity {
                 pickImageLauncher.launch(intent);
             }
         });
+
+        backButton.setOnClickListener(v -> finish());
 
         // 标签按钮点击事件
         setupTagButton(R.id.btn_technology, "技术");
@@ -152,6 +167,18 @@ public class AddPostActivity extends PublicActivity {
                 }
             }
         });
+    }
+
+    private void addImageToLayout(String imageUrl) {
+        ImageView imageView = new ImageView(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+        layoutParams.setMargins(8, 0, 8, 0);
+        imageView.setLayoutParams(layoutParams);
+        // 使用 Glide 或 Picasso 加载图片
+        Glide.with(this)
+                .load(imageUrl)
+                .into(imageView);
+        selectImageLayout.addView(imageView);
     }
 
     private String uploadImageToServer(Uri imageUri) throws Exception {
@@ -203,47 +230,111 @@ public class AddPostActivity extends PublicActivity {
         return result;
     }
 
+    class PostAddRequest implements Serializable {
+        private static final long serialVersionUID = -1L;
+        private String title;
+        private String content;
+        private List<String> pictures;
+        private List<String> tag;
+
+        public PostAddRequest(String title, String content, List<String> pictures, List<String> tag) {
+            this.title = title;
+            this.content = content;
+            this.pictures = pictures;
+            this.tag = tag;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public List<String> getPictures() {
+            return pictures;
+        }
+
+        public void setPictures(List<String> pictures) {
+            this.pictures = pictures;
+        }
+
+        public List<String> getTag() {
+            return tag;
+        }
+
+        public void setTag(List<String> tag) {
+            this.tag = tag;
+        }
+
+        @Override
+        public String toString() {
+            return "PostAddRequest{" +
+                    "title='" + title + '\'' +
+                    ", content='" + content + '\'' +
+                    ", pictures=" + pictures +
+                    ", tag=" + tag +
+                    '}';
+        }
+    }
 
     private void submitPost() {
-        try {
-            String title = editTitle.getText().toString();
-            String content = editContent.getText().toString();
 
-            JSONObject postJson = new JSONObject();
-            postJson.put("title", title);
-            postJson.put("content", content);
-            postJson.put("pictures", picturePaths);
-            postJson.put("tag", selectedTags);
+        new Thread(() -> {
+            try {
+                String title = editTitle.getText().toString();
+                String content = editContent.getText().toString();
 
-            RequestBody requestBody = RequestBody.create(
-                    postJson.toString(),
-                    MediaType.get("application/json; charset=utf-8")
-            );
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
-                    .build();
-            Request request = new Request.Builder()
-                    .url(UrlConstant.baseUrl + "api/post/addPost")
-                    .post(requestBody)
-                    .build();
-            Response response = okHttpClient.newCall(request).execute();
-            String responseBody = response.body().string();
-            Log.d("aaa", responseBody);
-            JSONObject jsonObject = new JSONObject(responseBody);
-            int code = jsonObject.getInt("code");
-            String message = jsonObject.getString("message");
-            if (code == 0) {
-                runOnUiThread(() -> {
-                    Toast.makeText(getApplicationContext(), "上传动态成功", Toast.LENGTH_SHORT).show();
-                });
-            } else {
-                runOnUiThread(() -> {
-                    Toast.makeText(getApplicationContext(), "上传动态失败", Toast.LENGTH_SHORT).show();
-                });
+                JSONObject postJson = new JSONObject();
+                postJson.put("title", title);
+                postJson.put("content", content);
+                postJson.put("pictures", picturePaths);
+                postJson.put("tag", selectedTags);
+
+                PostAddRequest postAddRequest = new PostAddRequest(title, content, picturePaths, selectedTags);
+                Gson gson = new Gson();
+                String json = gson.toJson(postAddRequest);
+
+                RequestBody requestBody = RequestBody.create(
+                        json,
+                        MediaType.get("application/json; charset=utf-8")
+                );
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                        .build();
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl + "api/post/addPost")
+                        .post(requestBody)
+                        .build();
+                Response response = okHttpClient.newCall(request).execute();
+                String responseBody = response.body().string();
+                Log.d("aaa", responseBody);
+                JSONObject jsonObject = new JSONObject(responseBody);
+                int code = jsonObject.getInt("code");
+                String message = jsonObject.getString("message");
+                if (code == 0) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "上传动态成功", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "上传动态失败", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "提交失败", Toast.LENGTH_SHORT).show();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "提交失败", Toast.LENGTH_SHORT).show();
-        }
+
+        }).start();
     }
 }
