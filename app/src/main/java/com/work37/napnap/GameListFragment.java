@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +45,7 @@ public class GameListFragment extends Fragment {
     private RecyclerView recyclerView;
     private GameAdaptor gameAdaptor;
     private List<Game> gameList;
+    private ProgressBar progressBar;
     private boolean isLoading = false;
     private int currentPage = 1;
     private int pageSize = 10;
@@ -70,14 +73,21 @@ public class GameListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_game_list, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        progressBar = view.findViewById(R.id.progressBar);
 
         //初始化游戏列表和适配器
         gameList = new ArrayList<>();
         gameAdaptor = new GameAdaptor(getContext(), gameList);
 
         //初始化recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(gameAdaptor);
+
+        // 添加分割线
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
 
         //为 RecyclerView 添加滚动监听器以实现分页
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -137,6 +147,7 @@ public class GameListFragment extends Fragment {
     @SuppressLint("UseCompatLoadingForDrawables")
     private void fetchGameData(String type) throws IOException, JSONException {
         isLoading = true;
+        getActivity().runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
 
         // Create Retrofit instance
         new Thread(()->{
@@ -186,7 +197,10 @@ public class GameListFragment extends Fragment {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     gameList.addAll(records);
                     gameAdaptor.notifyDataSetChanged();
+
                     isLoading = false;
+                    progressBar.setVisibility(View.GONE);
+
                     if (records.size() < pageSize) {
                         isLastPage = true;
                     } else {

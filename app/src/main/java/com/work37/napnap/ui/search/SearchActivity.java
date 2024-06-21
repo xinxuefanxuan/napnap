@@ -1,10 +1,6 @@
 package com.work37.napnap.ui.search;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -12,23 +8,13 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.work37.napnap.Adaptor.GameAdaptor;
-import com.work37.napnap.Adaptor.PostAdaptor;
-import com.work37.napnap.Adaptor.UserAdaptor;
 import com.work37.napnap.R;
-import com.work37.napnap.entity.Game;
-import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PublicActivity;
-import com.work37.napnap.ui.userlogin_register.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchActivity extends PublicActivity {
 
@@ -62,11 +48,11 @@ public class SearchActivity extends PublicActivity {
             public Fragment createFragment(int position) {
                 switch (position) {
                     case 0:
-                        return new GameList1Fragment();
+                        return new FragmentSearchGameList();
                     case 1:
-                        return new UserListFragment();
+                        return new FragmentSearchUserList();
                     case 2:
-                        return new PostListFragment();
+                        return new FragmentSearchPostList();
                     default:
                         return null;
                 }
@@ -92,12 +78,12 @@ public class SearchActivity extends PublicActivity {
 
     private void performSearchInFragment(int tabPosition, String query) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + tabPosition);
-        if (fragment instanceof GameList1Fragment) {
-            ((GameList1Fragment) fragment).performSearch(query);
-        } else if (fragment instanceof UserListFragment) {
-            ((UserListFragment) fragment).performSearch(query);
-        } else if (fragment instanceof PostListFragment) {
-            ((PostListFragment) fragment).performSearch(query);
+        if (fragment instanceof FragmentSearchGameList) {
+            ((FragmentSearchGameList) fragment).performSearch(query);
+        } else if (fragment instanceof FragmentSearchUserList) {
+            ((FragmentSearchUserList) fragment).performSearch(query);
+        } else if (fragment instanceof FragmentSearchPostList) {
+            ((FragmentSearchPostList) fragment).performSearch(query);
         }
     }
 }

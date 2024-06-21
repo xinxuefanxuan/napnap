@@ -5,22 +5,21 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.work37.napnap.Adaptor.PostAdaptor;
-import com.work37.napnap.Adaptor.UserAdaptor;
 import com.work37.napnap.R;
 import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;
-import com.work37.napnap.ui.userlogin_register.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,10 +30,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-public class PostListFragment extends Fragment {
+public class FragmentSearchPostList extends Fragment {
         private RecyclerView recyclerView;
         private PostAdaptor postAdaptor;
         private List<Post> postList;
+        private ProgressBar progressBar;
         private boolean isLoading = false;
         private int currentPage = 1;
         private int pageSize = 10;
@@ -44,13 +44,21 @@ public class PostListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_general_search_list, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        progressBar = view.findViewById(R.id.progressBar);
 
         postList = new ArrayList<>();
         postAdaptor = new PostAdaptor(getContext(), postList);
+
+        //初始化recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setAdapter(postAdaptor);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // 添加分割线
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -88,6 +96,7 @@ public class PostListFragment extends Fragment {
 
         private void fetchPostData(String query) {
             isLoading = true;
+            getActivity().runOnUiThread(()->progressBar.setVisibility(View.VISIBLE));
 
             new Thread(() -> {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -129,6 +138,7 @@ public class PostListFragment extends Fragment {
                     postList.addAll(records);
                     postAdaptor.notifyDataSetChanged();
                     isLoading = false;
+                    progressBar.setVisibility(View.GONE);
                     if (records.size() < pageSize) {
                         isLastPage = true;
                     } else {

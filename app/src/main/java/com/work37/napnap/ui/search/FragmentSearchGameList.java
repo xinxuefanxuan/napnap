@@ -1,27 +1,26 @@
 package com.work37.napnap.ui.search;
 
-import static com.work37.napnap.global.PublicApplication.getContext;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.work37.napnap.Adaptor.UserAdaptor;
+import com.work37.napnap.Adaptor.GameAdaptor;
 import com.work37.napnap.R;
+import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;
-import com.work37.napnap.ui.userlogin_register.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,10 +32,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class UserListFragment extends Fragment {
+public class FragmentSearchGameList extends Fragment {
     private RecyclerView recyclerView;
-    private UserAdaptor userAdaptor;
-    private List<User> userList;
+    private GameAdaptor gameAdaptor;
+    private List<Game> gameList;
+    private ProgressBar progressBar;
     private boolean isLoading = false;
     private int currentPage = 1;
     private int pageSize = 10;
@@ -46,27 +46,35 @@ public class UserListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_general_search_list, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        progressBar = view.findViewById(R.id.progressBar);
 
-        userList = new ArrayList<>();
-        userAdaptor = new UserAdaptor(getContext(), userList);
-        recyclerView.setAdapter(userAdaptor);
+        gameList = new ArrayList<>();
+        gameAdaptor = new GameAdaptor(getContext(), gameList);
+
+        //初始化recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setAdapter(gameAdaptor);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // 添加分割线
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == userList.size() - 1 && !isLoading && !isLastPage) {
+                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == gameList.size() - 1 && !isLoading && !isLastPage) {
                     currentPage++;
-                    fetchUserData("");
+                    fetchGameData("");
                 }
             }
         });
 
-        fetchUserData("");
+        fetchGameData("");
         return view;
     }
 
@@ -74,22 +82,23 @@ public class UserListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (!isFirstLoad) {
-            refreshUserList();
+            refreshGameList();
         } else {
             isFirstLoad = false;
         }
     }
 
-    private void refreshUserList() {
+    private void refreshGameList() {
         currentPage = 1;
         isLastPage = false;
-        userList.clear();
-        userAdaptor.notifyDataSetChanged();
-        fetchUserData("");
+        gameList.clear();
+        gameAdaptor.notifyDataSetChanged();
+        fetchGameData("");
     }
 
-    private void fetchUserData(String query) {
+    private void fetchGameData(String query) {
         isLoading = true;
+        getActivity().runOnUiThread(()->progressBar.setVisibility(View.VISIBLE));
 
         new Thread(() -> {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -112,7 +121,7 @@ public class UserListFragment extends Fragment {
             );
 
             Request request = new Request.Builder()
-                    .url(UrlConstant.baseUrl + "/api/user/listAllUserBySearch")
+                    .url(UrlConstant.baseUrl + "/api/game/listAllGameBySearch")
                     .post(requestBody)
                     .build();
 
@@ -125,12 +134,13 @@ public class UserListFragment extends Fragment {
                 throw new RuntimeException(e);
             }
 
-            List<User> records = gson.fromJson(responseBody,UserResponse.class).getData().getRecords();
+            List<Game> records = gson.fromJson(responseBody,GameResponse.class).getData().getRecords();
 
             new Handler(Looper.getMainLooper()).post(() -> {
-                userList.addAll(records);
-                userAdaptor.notifyDataSetChanged();
+                gameList.addAll(records);
+                gameAdaptor.notifyDataSetChanged();
                 isLoading = false;
+                progressBar.setVisibility(View.GONE);
                 if (records.size() < pageSize) {
                     isLastPage = true;
                 } else {
@@ -143,9 +153,8 @@ public class UserListFragment extends Fragment {
     public void performSearch(String query) {
         currentPage = 1;
         isLastPage = false;
-        userList.clear();
-        userAdaptor.notifyDataSetChanged();
-        fetchUserData(query);
+        gameList.clear();
+        gameAdaptor.notifyDataSetChanged();
+        fetchGameData(query);
     }
 }
-
