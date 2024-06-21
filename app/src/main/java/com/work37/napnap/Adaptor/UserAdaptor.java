@@ -45,8 +45,8 @@ public class UserAdaptor extends RecyclerView.Adapter<UserAdaptor.ViewHolder> {
                 .into(holder.userAvatar);
 
         // Set user name, followers, and following
-        holder.userName.setText(user.getUsername());
-        holder.userId.setText(String.valueOf(user.getUid()));
+        holder.userName.setText(user.getUserName());
+        holder.userId.setText(user.getUserAccount());
         holder.userFollowers.setText("粉丝: " + user.getFanNum());
         holder.userFollowing.setText("关注: " + user.getFollowNum());
 
