@@ -5,18 +5,84 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- 上方区域，包括头像、用户名、发布时间、标签 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <!-- 用户头像 -->
+        <ImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop"
+            />
+
+        <!-- 用户名、发布时间、标签 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="8dp">
+
+            <!-- 用户名 -->
+            <TextView
+                android:id="@+id/postUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textSize="14sp" />
+
+            <!-- 发布时间 -->
+            <TextView
+                android:id="@+id/postTimestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Timestamp"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+
+            <!-- 标签 -->
+            <TextView
+                android:id="@+id/postTags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tags"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 帖子标题 -->
     <TextView
         android:id="@+id/postTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post Title"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:paddingBottom="4dp" />
 
+    <!-- 正文内容 -->
     <TextView
         android:id="@+id/postContent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Post Content"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_marginTop="4dp" />
 
+    <!-- 帖子图片 -->
+    <ImageView
+        android:id="@+id/postImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+         />
 </LinearLayout>
+

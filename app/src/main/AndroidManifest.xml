@@ -91,6 +91,10 @@
             android:exported="true"
             />
 
+        <activity android:name=".detail.PostDetailActivity"
+            android:exported="true"
+            />
+
 
 
     </application>

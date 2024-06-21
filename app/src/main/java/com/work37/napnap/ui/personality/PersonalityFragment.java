@@ -65,13 +65,13 @@ public class PersonalityFragment extends Fragment {
             });
         } else {
             User user = PublicApplication.getCurrentUser();
-            personalityViewModel.setUsername(user.getUsername());
-            personalityViewModel.setUserAccount(user.getUid());
+            personalityViewModel.setUsername(user.getUserName());
+            personalityViewModel.setUserAccount(user.getUserAccount());
             personalityViewModel.setFollowingCount(user.getFollowNum());
             personalityViewModel.setFollowersCount(user.getFanNum());
             personalityViewModel.setUserAvatar(user.getUserAvatar());
-            binding.userAccount.setText(String.valueOf(user.getUid()));
-            binding.username.setText(user.getUsername());
+            binding.userAccount.setText(user.getUserAccount());
+            binding.username.setText(user.getUserName());
             binding.followersCount.setText("粉丝:"+user.getFanNum());
             binding.followingCount.setText("关注:"+user.getFollowNum());
             // 确保在 UI 线程中进行 Glide 加载操作
@@ -199,8 +199,8 @@ public class PersonalityFragment extends Fragment {
         } else {
             // 用户已登录，更新 UI 显示用户信息
             User user = PublicApplication.getCurrentUser();
-            binding.username.setText(user.getUsername());
-            binding.userAccount.setText(String.valueOf(user.getUid()));
+            binding.username.setText(user.getUserName());
+            binding.userAccount.setText(user.getUserAccount());
             binding.followingCount.setText(String.valueOf(user.getFollowNum()));
             binding.followersCount.setText(String.valueOf(user.getFanNum()));
             binding.viewProfileButton.setEnabled(true);//查看资料按钮不可点击

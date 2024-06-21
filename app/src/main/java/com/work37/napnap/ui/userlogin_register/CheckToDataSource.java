@@ -112,7 +112,7 @@ public class CheckToDataSource {
                     JSONObject data = new JSONObject(jsonObject.getString("data"));
                     User user = null;
                     try {
-                        user = new User(data.getInt("id"),data.getString("userName"),data.getInt("fansNum")
+                        user = new User(data.getLong("id"),data.getString("userName"),data.getInt("fansNum")
                                 ,data.getInt("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
                         PublicApplication.setCurrentUser(user);
                         mutableLiveData.postValue(new LoginReponse(data));

@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class PersonalityViewModel extends ViewModel {
     private final MutableLiveData<String> username = new MutableLiveData<>();
-    private final MutableLiveData<Integer> userAccount = new MutableLiveData<>();
+    private final MutableLiveData<String> userAccount = new MutableLiveData<>();
     private final MutableLiveData<Integer> followingCount = new MutableLiveData<>();
     private final MutableLiveData<Integer> followersCount = new MutableLiveData<>();
 
@@ -26,7 +26,7 @@ public class PersonalityViewModel extends ViewModel {
     public PersonalityViewModel(personalityRepository personalityRepository) {
         this.personalityRepository = personalityRepository;
         username.postValue("请登录");
-        userAccount.postValue(-1);
+        userAccount.postValue("");
         followingCount.postValue(-1);
         followersCount.postValue(-1);
     }
@@ -40,8 +40,8 @@ public class PersonalityViewModel extends ViewModel {
     }
 
     public void updateUser(User user) {
-        username.postValue(user.getUsername());
-        userAccount.postValue(user.getUid());
+        username.postValue(user.getUserName());
+        userAccount.postValue(user.getUserAccount());
         followingCount.postValue(user.getFollowNum());
         followersCount.postValue(user.getFanNum());
         userAvatar.postValue(user.getUserAvatar());
@@ -51,7 +51,7 @@ public class PersonalityViewModel extends ViewModel {
         return username;
     }
 
-    public LiveData<Integer> getUserAccount() {
+    public LiveData<String> getUserAccount() {
         return userAccount;
     }
 
@@ -67,7 +67,7 @@ public class PersonalityViewModel extends ViewModel {
         username.postValue(name);
     }
 
-    public void setUserAccount(int account) {
+    public void setUserAccount(String account) {
         userAccount.postValue(account);
     }
 

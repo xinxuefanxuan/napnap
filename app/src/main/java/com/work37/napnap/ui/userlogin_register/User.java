@@ -18,8 +18,9 @@ public class User implements Cloneable, Serializable {
 
     @PrimaryKey
     @NonNull
-    private int uid;
-    private String username;
+    private Long uid;
+    private String userAccount;
+    private String userName;
     public int fanNum;
     public int followNum;
 
@@ -30,14 +31,22 @@ public class User implements Cloneable, Serializable {
     }
 
     @Ignore
-    public User(String username, String password) {
-        this.username = username;
+    public User(String userAccount, String password) {
+        this.userAccount = userAccount;
+    }
+
+    @Ignore
+    public User(Long uid,String userAccount,String userAvatar){
+        this.uid = uid;
+        this.userAccount = userAccount;
+        this.userAvatar = userAvatar;
     }
 
     public User(JSONObject data) {
         try {
-            this.uid = data.getInt("id");
-            this.username = data.getString("username");
+            this.uid = data.getLong("id");
+            this.userAccount = data.getString("userAccount");
+            this.userName = data.getString("username");
             this.userAvatar = data.getString("avatar");
             this.fanNum = (data.getInt("fansNum"));
             this.followNum = (data.getInt("followNum"));
@@ -60,9 +69,20 @@ public class User implements Cloneable, Serializable {
     }
 
     @Ignore
-    public User(int uid, String username, int fanNum, int followNum,@Nullable String profile,@Nullable String userAvator) {
+    public User(Long uid, String userAccount, String userName,int fanNum, int followNum,@Nullable String profile,@Nullable String userAvator) {
         this.uid = uid;
-        this.username = username;
+        this.userAccount = userAccount;
+        this.userName = userName;
+        this.fanNum = fanNum;
+        this.followNum = followNum;
+        this.profile = profile;
+        this.userAvatar=userAvator;
+    }
+
+    @Ignore
+    public User(Long uid, String userName,int fanNum, int followNum,@Nullable String profile,@Nullable String userAvator) {
+        this.uid = uid;
+        this.userName = userName;
         this.fanNum = fanNum;
         this.followNum = followNum;
         this.profile = profile;
@@ -81,21 +101,30 @@ public class User implements Cloneable, Serializable {
         return user;
     }
 
-    public int getUid() {
+    public String getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Long getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public int getFanNum() {
         return fanNum;
@@ -126,7 +155,8 @@ public class User implements Cloneable, Serializable {
     public String toString() {
         return "User{" +
                 "uid=" + uid +
-                ", username='" + username + '\'' +
+                ", userAccount='" + userAccount + '\'' +
+                ", username='" + userName + '\'' +
                 ", fanNum=" + fanNum +
                 ", followNum=" + followNum +
                 ", profile='" + profile + '\'' +
