@@ -73,13 +73,14 @@ public class MainActivity extends PublicActivity {
             @Override
             public void onChanged(LoginReponse loginReponse) {
                 if(loginReponse==null){
-                    return;
+                    navigateToLoginActivity();
                 }
                 Log.d("eee",loginReponse.toString());
 
                 if(loginReponse.isResultState()){
                     Toast.makeText(getApplicationContext(),"用户已登录",Toast.LENGTH_SHORT).show();
                 }else{
+                    navigateToLoginActivity();
                     Toast.makeText(getApplicationContext(),"用户未登录，请先登录",Toast.LENGTH_SHORT).show();
                     Log.d("ddd","登录失败");
                 }

@@ -8,36 +8,54 @@ import java.util.List;
 
 public class Post implements Serializable {
 
-    private int id;//帖子id
-    private int userId;//发帖用户id
+    private Long id;//帖子id
+    private Long userId;//发帖用户id
     private String title;//标题
     private String content;//内容
-    private List<String> picture;//图片地址
+    private List<String> pictures;//图片地址
     private List<String> tag;
     private int likes;
     private int collectNum;
 
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 //    private Date createDate;
 
     public Post() {
     }
 
-    public Post(int id,int userId, String title, String content, List<String> picture, List<String> tag, int likes, int collectNum) {
+    public Post(Long id, Long userId, String title, String content, List<String> pictures, List<String> tag, int likes, int collectNum, Date createTime) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.content = content;
-        this.picture = picture;
+        this.pictures = pictures;
         this.tag = tag;
         this.likes = likes;
         this.collectNum = collectNum;
+        this.createTime = createTime;
     }
 
-    public int getUserId() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -57,12 +75,12 @@ public class Post implements Serializable {
         this.content = content;
     }
 
-    public List<String> getPicture() {
-        return picture;
+    public List<String> getPictures() {
+        return pictures;
     }
 
-    public void setPicture(List<String> picture) {
-        this.picture = picture;
+    public void setPictures(List<String> pictures) {
+        this.pictures = pictures;
     }
 
     public List<String> getTag() {
@@ -89,14 +107,6 @@ public class Post implements Serializable {
         this.collectNum = collectNum;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "Post{" +
@@ -104,10 +114,11 @@ public class Post implements Serializable {
                 ", userId=" + userId +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", picture=" + picture +
+                ", pictures=" + pictures +
                 ", tag=" + tag +
                 ", likes=" + likes +
                 ", collectNum=" + collectNum +
+                ", createTime=" + createTime +
                 '}';
     }
 }

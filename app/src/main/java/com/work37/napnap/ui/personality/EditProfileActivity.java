@@ -82,7 +82,7 @@ public class EditProfileActivity extends PublicActivity {
         if (currentUser != null) {
             // 设置用户头像、名称和简介
             Glide.with(this).load(currentUser.getUserAvatar()).into(userAvatar);
-            editUserName.setText(currentUser.getUsername());
+            editUserName.setText(currentUser.getUserName());
             editUserProfile.setText(currentUser.getProfile().isEmpty() ? "这个人很懒，什么都没有留下" : currentUser.getProfile());
             disableEditing();
         }
@@ -183,7 +183,7 @@ public class EditProfileActivity extends PublicActivity {
         String newUserProfile = editUserProfile.getText().toString().trim();
 
         // 更新本地用户信息
-        currentUser.setUsername(newUserName);
+        currentUser.setUserName(newUserName);
         currentUser.setProfile(newUserProfile);
 
         // 发送更新请求到后端
@@ -235,7 +235,7 @@ public class EditProfileActivity extends PublicActivity {
                         Toast.makeText(getApplicationContext(), "成功更新资料", Toast.LENGTH_SHORT).show();
                         User user = PublicApplication.getCurrentUser();
                         user.setProfile(editUserProfile.getText().toString());
-                        user.setUsername(editUserName.getText().toString());
+                        user.setUserName(editUserName.getText().toString());
                         if(uploadedImageUrl!=null){
                             user.setUserAvatar(uploadedImageUrl);
                         }

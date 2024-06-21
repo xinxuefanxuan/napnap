@@ -53,6 +53,7 @@ dependencies {
     implementation ("org.json:json:20210307")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation("cn.hutool:hutool-all:5.8.28")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

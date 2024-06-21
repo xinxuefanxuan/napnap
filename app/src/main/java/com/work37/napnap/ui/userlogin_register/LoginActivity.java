@@ -120,7 +120,7 @@ public class LoginActivity extends PublicActivity {
                     Log.d("ccc","登陆成功");
                     JSONObject data = loginReponse.getData();
                     try {
-                        User user = new User(data.getInt("id"),data.getString("userName"),data.getInt("fansNum")
+                        User user = new User(data.getLong("id"),data.getString("userAccount"),data.getString("userName"),data.getInt("fansNum")
                         ,data.getInt("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
                         PublicApplication.setCurrentUser(user);
                         // 更新 PersonalityFragment 的用户信息
