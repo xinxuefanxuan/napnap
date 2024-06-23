@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -16,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.work37.napnap.R;
 import com.work37.napnap.databinding.FragmentCommunityBinding;
-import com.work37.napnap.ui.findgame.TagFilteredGameListFragment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,10 +37,10 @@ public class CommunityFragment extends Fragment {
         if (savedInstanceState == null) {
             tagFilterPostListFragment = TagFilterPostListFragment.newInstance(new ArrayList<>(selectedTags));
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.recyclerView1, tagFilterPostListFragment)
+                    .replace(R.id.findgamePager, tagFilterPostListFragment)
                     .commit();
         } else {
-            tagFilterPostListFragment = (TagFilterPostListFragment) getChildFragmentManager().findFragmentById(R.id.recyclerView1);
+            tagFilterPostListFragment = (TagFilterPostListFragment) getChildFragmentManager().findFragmentById(R.id.findgamePager);
         }
         setupCategoryButtons();
         binding.fabAddPost.setOnClickListener(new View.OnClickListener() {

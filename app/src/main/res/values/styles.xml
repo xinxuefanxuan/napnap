@@ -1,0 +1,31 @@
+<!-- res/values/styles.xml -->
+<resources>
+    <style name="category_button_selected">
+        <item name="android:layout_width">48dp</item> <!-- 使用dp而不是sp -->
+        <item name="android:layout_height">24dp</item> <!-- 使用dp而不是sp -->
+        <item name="android:background">@drawable/category_button_selected_background</item>
+        <item name="android:textColor">@color/category_button_selectedTextColor</item> <!-- 文字颜色 -->
+        <item name="android:paddingLeft">0dp</item> <!-- 左内边距 -->
+        <item name="android:paddingRight">0dp</item> <!-- 右内边距 -->
+        <item name="android:paddingTop">0dp</item> <!-- 上内边距 -->
+        <item name="android:paddingBottom">0dp</item> <!-- 下内边距 -->
+        <item name="android:textSize">14sp</item> <!-- 文字大小 -->
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:layout_gravity">center</item> <!-- 布局重心 -->
+    </style>
+
+
+    <style name="category_button_unselected">
+        <item name="android:layout_width">48dp</item> <!-- 使用dp而不是sp -->
+        <item name="android:layout_height">24dp</item> <!-- 使用dp而不是sp -->
+        <item name="android:background">@drawable/category_button_unselected_background</item>
+        <item name="android:textColor">@color/category_button_unselectedTextColor</item> <!-- 文字颜色 -->
+        <item name="android:paddingLeft">0dp</item> <!-- 左内边距 -->
+        <item name="android:paddingRight">0dp</item> <!-- 右内边距 -->
+        <item name="android:paddingTop">0dp</item> <!-- 上内边距 -->
+        <item name="android:paddingBottom">0dp</item> <!-- 下内边距 -->
+        <item name="android:textSize">14sp</item> <!-- 文字大小 -->
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:layout_gravity">center</item> <!-- 布局重心 -->
+    </style>
+</resources>

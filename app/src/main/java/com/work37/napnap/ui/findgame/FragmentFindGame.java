@@ -4,17 +4,14 @@ import static com.work37.napnap.R.*;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.work37.napnap.R;
 import com.work37.napnap.databinding.FragmentFindGameBinding;
@@ -23,11 +20,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FindgameFragment extends Fragment {
+public class FragmentFindGame extends Fragment {
 
     private FragmentFindGameBinding binding;
     private Set<String> selectedTags = new HashSet<>();
-    private TagFilteredGameListFragment tagFilteredGameListFragment;
+    private FragmentFindGameList fragmentFindGameList;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -36,12 +33,12 @@ public class FindgameFragment extends Fragment {
         View root = binding.getRoot();
         // Initialize RecyclerView with TagFilteredGameListFragment
         if (savedInstanceState == null) {
-            tagFilteredGameListFragment = TagFilteredGameListFragment.newInstance(new ArrayList<>(selectedTags));
+            fragmentFindGameList = FragmentFindGameList.newInstance(new ArrayList<>(selectedTags));
             getChildFragmentManager().beginTransaction()
-                    .replace(id.recyclerView1, tagFilteredGameListFragment)
+                    .replace(id.findgamePager, fragmentFindGameList)
                     .commit();
         } else {
-            tagFilteredGameListFragment = (TagFilteredGameListFragment) getChildFragmentManager().findFragmentById(R.id.recyclerView1);
+            fragmentFindGameList = (FragmentFindGameList) getChildFragmentManager().findFragmentById(R.id.findgamePager);
         }
         setupCategoryButtons();
         return root;
@@ -55,57 +52,59 @@ public class FindgameFragment extends Fragment {
             updateButtonStates();
         });
         binding.btnAdventure.setOnClickListener(v -> {
-            toggleTag("冒险", binding.btnAdventure);
+            toggleTag("冒险");
         });
         binding.btnAnime.setOnClickListener(v -> {
-            toggleTag("二次元", binding.btnAnime);
+            toggleTag("二次元");
         });
         binding.btnAction.setOnClickListener(v -> {
-            toggleTag("动作", binding.btnAction);
+            toggleTag("动作");
         });
         binding.btnCard.setOnClickListener(v -> {
-            toggleTag("卡牌", binding.btnCard);
+            toggleTag("卡牌");
         });
         binding.btnNap.setOnClickListener(v -> {
-            toggleTag("休闲", binding.btnNap);
+            toggleTag("休闲");
         });
         binding.btnShoot.setOnClickListener(v -> {
-            toggleTag("射击", binding.btnShoot);
+            toggleTag("射击");
         });
         binding.btnSingle.setOnClickListener(v -> {
-            toggleTag("单机", binding.btnSingle);
+            toggleTag("单机");
         });
         binding.btnTest.setOnClickListener(v -> {
-            toggleTag("测试", binding.btnTest);
+            toggleTag("测试");
         });
     }
 
 //    @SuppressLint("ResourceAsColor")
     @SuppressLint("ResourceAsColor")
-    private void toggleTag(String tag, Button button) {
+    private void toggleTag(String tag) {
         if (selectedTags.contains(tag)) {
             selectedTags.remove(tag);
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_button_color)); // 恢复默认颜色
         } else {
             selectedTags.add(tag);
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.selected_button_color)); // 选中颜色
         }
         updateGameList();
         if (selectedTags.isEmpty()) {
-            binding.btnAll.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.selected_button_color));
         } else {
-            binding.btnAll.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_button_color));
         }
+        updateButtonStates();
     }
 
     private void updateGameList() {
-        if (tagFilteredGameListFragment != null) {
-            tagFilteredGameListFragment.updateTags(new ArrayList<>(selectedTags));
+        if (fragmentFindGameList != null) {
+            fragmentFindGameList.updateTags(new ArrayList<>(selectedTags));
         }
     }
     private void updateButtonStates() {
         // 更新所有按钮的颜色状态
-        binding.btnAll.setBackgroundColor(selectedTags.isEmpty() ? ContextCompat.getColor(getContext(), R.color.selected_button_color): ContextCompat.getColor(getContext(), R.color.default_button_color));
+        binding.btnAll.setBackgroundResource(selectedTags.isEmpty() ?
+                drawable.category_button_selected_background :
+                drawable.category_button_unselected_background );
+        binding.btnAll.setTextColor(selectedTags.isEmpty() ?
+                ContextCompat.getColor(getContext(), R.color.category_button_selectedTextColor) :
+                ContextCompat.getColor(getContext(), R.color.category_button_unselectedTextColor));
         updateButtonState(binding.btnAdventure, "冒险");
         updateButtonState(binding.btnAnime, "二次元");
         updateButtonState(binding.btnAction, "动作");
@@ -119,9 +118,11 @@ public class FindgameFragment extends Fragment {
     @SuppressLint("ResourceAsColor")
     private void updateButtonState(Button button, String tag) {
         if (selectedTags.contains(tag)) {
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.selected_button_color));
+            button.setBackgroundResource(R.drawable.category_button_selected_background);
+            button.setTextColor(ContextCompat.getColor(getContext(), R.color.category_button_selectedTextColor));
         } else {
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_button_color));
+            button.setBackgroundResource(R.drawable.category_button_unselected_background);
+            button.setTextColor(ContextCompat.getColor(getContext(), R.color.category_button_unselectedTextColor));
         }
     }
 

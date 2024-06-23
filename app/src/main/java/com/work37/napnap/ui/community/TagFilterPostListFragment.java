@@ -14,17 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.work37.napnap.Adaptor.GameAdaptor;
 import com.work37.napnap.Adaptor.PostAdaptor;
 import com.work37.napnap.Game.GameRequest;
 import com.work37.napnap.databinding.FragmentTagfilterPostlistBinding;
-import com.work37.napnap.databinding.FragmentTagfilteredGamelistBinding;
-import com.work37.napnap.entity.Game;
 import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;
-import com.work37.napnap.ui.findgame.TagFilteredGameListFragment;
-import com.work37.napnap.ui.search.GameResponse;
 import com.work37.napnap.ui.search.PostResponse;
 
 import java.util.ArrayList;

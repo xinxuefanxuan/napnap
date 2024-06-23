@@ -15,8 +15,16 @@
     <color name="grey_text">#999999</color>
     <color name="colorPrimary">#6200EE</color>
     <color name="gray">#808080</color>
-    <color name="default_button_color">#FF03DAC5</color> <!-- 默认颜色 -->
+
+    <color name="default_button_color">#00FFFFFF</color> <!-- 默认颜色 -->
     <color name="selected_button_color">#0000FF</color> <!-- 选中颜色，蓝色 -->
+
+    <color name="category_button_selectedColor">@color/black</color>
+    <color name="category_button_unselectedColor">@color/light_grey</color>
+    <color name="category_button_selectedTextColor">@color/white</color>
+    <color name="category_button_unselectedTextColor">@color/black</color>
+    <color name="category_button_selectedBorderColor">@color/black</color>
+    <color name="category_button_unselectedBorderColor">@color/black</color>
 
 
     <color name="colorPrimaryDark">#3700B3</color>

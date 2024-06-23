@@ -142,7 +142,7 @@
 
 
         <FrameLayout
-            android:id="@+id/recyclerView1"
+            android:id="@+id/findgamePager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
              >

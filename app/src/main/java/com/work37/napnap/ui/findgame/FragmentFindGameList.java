@@ -31,7 +31,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class TagFilteredGameListFragment extends Fragment {
+public class FragmentFindGameList extends Fragment {
     private FragmentTagfilteredGamelistBinding binding;
     private static final String ARG_TAGS = "tags";
     private List<String> tags;
@@ -43,8 +43,8 @@ public class TagFilteredGameListFragment extends Fragment {
     private int pageSize = 10;
     private boolean isLastPage = false;
 
-    public static TagFilteredGameListFragment newInstance(List<String> tags) {
-        TagFilteredGameListFragment fragment = new TagFilteredGameListFragment();
+    public static FragmentFindGameList newInstance(List<String> tags) {
+        FragmentFindGameList fragment = new FragmentFindGameList();
         Bundle args = new Bundle();
         args.putStringArrayList(ARG_TAGS, new ArrayList<>(tags));
         fragment.setArguments(args);
