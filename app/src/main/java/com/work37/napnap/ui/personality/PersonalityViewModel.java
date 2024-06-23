@@ -21,7 +21,6 @@ public class PersonalityViewModel extends ViewModel {
     private final MutableLiveData<String> userAvatar = new MutableLiveData<>();
 
     private final personalityRepository personalityRepository;
-    private final MutableLiveData<Boolean> logoutResult = new MutableLiveData<>();
 
     public PersonalityViewModel(personalityRepository personalityRepository) {
         this.personalityRepository = personalityRepository;
@@ -31,13 +30,7 @@ public class PersonalityViewModel extends ViewModel {
         followersCount.postValue(-1);
     }
 
-    public LiveData<Boolean> getLogoutResult() {
-        return logoutResult;
-    }
 
-    public void logout() throws JSONException, IOException {
-        personalityRepository.logout().observeForever(logoutResult::setValue);
-    }
 
     public void updateUser(User user) {
         username.postValue(user.getUserName());

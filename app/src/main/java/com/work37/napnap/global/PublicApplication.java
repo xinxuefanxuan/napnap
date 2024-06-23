@@ -21,7 +21,6 @@ public class PublicApplication extends Application {
         return mContext;
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();

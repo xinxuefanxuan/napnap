@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Back Button -->
     <ImageButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
@@ -15,24 +14,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:padding="16dp" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/error_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone" />
 
 </LinearLayout>
 

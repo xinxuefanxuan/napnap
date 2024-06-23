@@ -131,9 +131,7 @@ public class FragmentSearchPostList extends Fragment {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
                 List<Post> records = gson.fromJson(responseBody, PostResponse.class).getData().getRecords();
-
                 new Handler(Looper.getMainLooper()).post(() -> {
                     postList.addAll(records);
                     postAdaptor.notifyDataSetChanged();

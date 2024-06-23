@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,21 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.work37.napnap.databinding.FragmentPersonalityBinding;
+import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicApplication;
+import com.work37.napnap.global.UrlConstant;
 import com.work37.napnap.ui.userlogin_register.LoginActivity;
 import com.work37.napnap.ui.userlogin_register.LoginViewModel;
 import com.work37.napnap.ui.userlogin_register.User;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class PersonalityFragment extends Fragment {
     private FragmentPersonalityBinding binding;
@@ -74,11 +82,12 @@ public class PersonalityFragment extends Fragment {
             binding.username.setText(user.getUserName());
             binding.followersCount.setText("粉丝:"+user.getFanNum());
             binding.followingCount.setText("关注:"+user.getFollowNum());
+
             // 确保在 UI 线程中进行 Glide 加载操作
             new Handler(Looper.getMainLooper()).post(() -> {
                 Glide.with(binding.userAvatar.getContext())
-                        .load(user.getUserAvatar())
-                        .into(binding.userAvatar);
+                            .load(user.getUserAvatar())
+                            .into(binding.userAvatar);
             });
             binding.btnCollectionApp.setEnabled(true);
             binding.btnCollectionPost.setEnabled(true);
@@ -150,27 +159,10 @@ public class PersonalityFragment extends Fragment {
         binding.btnLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    performLogout();
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                performLogout();
             }
         });
 
-        // 观察注销结果
-        personalityViewModel.getLogoutResult().observe(getViewLifecycleOwner(), result -> {
-            if (result) {
-                Toast.makeText(getContext(), "退出登录成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getContext(), LoginActivity.class);
-                startActivity(intent);
-                requireActivity().finish(); // 确保当前活动被关闭
-            } else {
-                Toast.makeText(getContext(), "退出登录失败", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         return root;
     }
@@ -214,8 +206,39 @@ public class PersonalityFragment extends Fragment {
         }
     }
     //退出登录
-    private void performLogout() throws JSONException, IOException {
-        personalityViewModel.logout();
+    private void performLogout(){
+        new Thread(()->{
+        try{
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(new PersistentCookieJar(getContext()))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(UrlConstant.baseUrl+"api/user/logout")
+                    .build();
+            Response response = okHttpClient.newCall(request).execute();
+            String responseBody = response.body().string();
+            Log.d("aaa",responseBody);
+            JSONObject jsonObject = new JSONObject(responseBody);
+            int code = jsonObject.getInt("code");
+            String message = jsonObject.getString("message");
+            if(code==0){
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    PublicApplication.setCurrentUser(null);
+                    Toast.makeText(getContext(),"退出登录成功",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(),LoginActivity.class);
+                    startActivity(intent);
+                });
+            }else{
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    Toast.makeText(getContext(),"退出登录失败",Toast.LENGTH_SHORT).show();
+                });
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        }).start();
+
     }
     @Override
     public void onDestroyView() {

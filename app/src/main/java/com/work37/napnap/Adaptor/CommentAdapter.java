@@ -40,11 +40,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
         CommentAndUser commentAndUser = commentList.get(position);
-
-
         if(commentAndUser.getUserAvatar()!=null){
             Glide.with(context).load(commentAndUser.getUserAvatar())
                     .into(holder.userAvatar);
+        }else{
+            holder.userAvatar.setVisibility(View.GONE);
         }
         holder.username.setText(commentAndUser.getUsername());
         holder.commentContent.setText(commentAndUser.getContent());

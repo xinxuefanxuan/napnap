@@ -83,7 +83,7 @@
             android:exported="true"
             />
 
-        <activity android:name=".detail.UserProfileActivity"
+        <activity android:name=".detail.UserDetailActivity"
             android:exported="true"
             />
 

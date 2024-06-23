@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -80,6 +81,13 @@ public class PostDetailActivity extends PublicActivity {
 
     private boolean isLastPage = false;
 
+    //是否点赞
+    private boolean isLike;
+    //是否收藏
+    private boolean isCollect;
+    //是否关注发贴用户
+    private boolean isConcern;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +139,21 @@ public class PostDetailActivity extends PublicActivity {
 
         //对点赞按钮和收藏按钮进行初始化，判断是否之前就已经点赞过或者收藏过
         //对关注按钮也是，首先要获取该用户之前是否已经关注过他
+        CompletableFuture<Void> voidCompletableFuture1 = CompletableFuture.runAsync(()->loadLikeAsync(postId));
+        try {
+            voidCompletableFuture1.get();
+            updateLikeButton();
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
+        CompletableFuture<Void> voidCompletableFuture2 = CompletableFuture.runAsync(()->loadCollectAsync(postId));
+        try {
+            voidCompletableFuture2.get();
+            updatecollectButton();
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         //获取帖子下面的评论
         loadComments(postId);
@@ -145,6 +167,8 @@ public class PostDetailActivity extends PublicActivity {
                 if (user.getUserAvatar() != null) {
                     Glide.with(this).load(user.getUserAvatar())
                             .into(userAvatar);
+                }else{
+                    userAvatar.setVisibility(View.GONE);
                 }
                 username.setText(user.getUserName());
             }
@@ -157,9 +181,7 @@ public class PostDetailActivity extends PublicActivity {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
                 if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == commentAdapter.getItemCount() - 1 && !isLoading && !isLastPage) {
                     // Load more comments when reaching the bottom
                     currentPage++;
@@ -172,15 +194,14 @@ public class PostDetailActivity extends PublicActivity {
         // Handle back button
         findViewById(R.id.backButton).setOnClickListener(v -> finish());
 
-
         // Handle follow button click
         followButton.setOnClickListener(v -> followUser());
 
         // Handle like button click
-        likeButton.setOnClickListener(v -> likePost(postId));
+        likeButton.setOnClickListener(v -> likeOrUnlikePost(postId));
 
         // Handle bookmark button click
-        collectButton.setOnClickListener(v -> bookmarkPost(postId));
+        collectButton.setOnClickListener(v -> CollectOrunCollectPost(postId));
 
         // Handle post comment button click
         findViewById(R.id.postCommentButton).setOnClickListener(v -> postComment(postId));
@@ -343,6 +364,43 @@ public class PostDetailActivity extends PublicActivity {
         }
     }
 
+    //更新点赞按钮
+    private void updateLikeButton(){
+        if(isLike){
+            likeButton.setImageResource(R.drawable.like);
+        }else{
+            likeButton.setImageResource(R.drawable.unlike);
+        }
+    }
+
+    //更新收藏按钮
+    private void updatecollectButton(){
+        if(isCollect){
+            collectButton.setImageResource(R.drawable.collect);
+        }else{
+            collectButton.setImageResource(R.drawable.uncollect);
+        }
+    }
+
+    /**
+     * 初始化时加载用户是否点赞了该帖子
+     * @param postId
+     */
+    private void loadLikeAsync(Long postId){
+
+    }
+
+    /**
+     * 初始化时加载用户是否收藏了该帖子
+     * @param postId
+     */
+    private void loadCollectAsync(Long postId) {
+    }
+
+    /**
+     * 加载用户信息
+     * @param userId
+     */
     private void loadUserAsync(Long userId){
         try {
             // Create JSON object
@@ -377,46 +435,6 @@ public class PostDetailActivity extends PublicActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    //根据用户id获取用户具体信息
-    private void loadUserById(Long userId) {
-        new Thread(() -> {
-            try {
-                // Create JSON object
-                JSONObject jsonObject1 = new JSONObject();
-                jsonObject1.put("userId", userId);
-
-                RequestBody requestBody = RequestBody.create(
-                        jsonObject1.toString(),
-                        MediaType.get("application/json; charset=utf-8")
-                );
-
-                OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                        .cookieJar(new PersistentCookieJar(getApplicationContext()))
-                        .build();
-                Request request = new Request.Builder()
-                        .url(UrlConstant.baseUrl + "api/user/getUserById")
-                        .post(requestBody)
-                        .build();
-                Response response = okHttpClient.newCall(request).execute();
-                String responseBody = response.body().string();
-                JSONObject jsonObject = new JSONObject(responseBody);
-                int code = jsonObject.getInt("code");
-                if (code == 0) {
-                    JSONObject userData = jsonObject.getJSONObject("data");
-                    String userAvatar = userData.getString("userAvatar");
-                    String username = userData.getString("userName");
-                    User user = new User();
-                    user.setUserName(username);
-                    user.setUserAvatar(userAvatar);
-                    userCache.put(userId, user);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-
     }
 
 
@@ -517,15 +535,98 @@ public class PostDetailActivity extends PublicActivity {
 
 
     private void followUser() {
-        // Implement follow user logic
+
     }
 
-    private void likePost(Long postId) {
-        // Implement like post logic
+    //点赞取消点赞
+    private void likeOrUnlikePost(Long postId){
+        new Thread(()->{
+            try {
+                // Create JSON object
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("postId", postId);
+
+                RequestBody requestBody = RequestBody.create(
+                        jsonObject1.toString(),
+                        MediaType.get("application/json; charset=utf-8")
+                );
+
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                        .build();
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl + "api/post/likePost")
+                        .post(requestBody)
+                        .build();
+                Response response = okHttpClient.newCall(request).execute();
+                String responseBody = response.body().string();
+                JSONObject jsonObject = new JSONObject(responseBody);
+                int code = jsonObject.getInt("code");
+                if (code == 0) {
+                    JSONObject userData = jsonObject.getJSONObject("data");
+                    Long likes = userData.getLong("likes");
+                    runOnUiThread(()->{
+                        if(isLike){
+                            isLike = false;
+                            Toast.makeText(this,"取消点赞成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            isLike = true;
+                            Toast.makeText(this,"点赞成功",Toast.LENGTH_SHORT).show();
+                        }
+                        updateLikeButton();
+                        likeCount.setText(String.valueOf(likes));
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
-    private void bookmarkPost(Long postId) {
-        // Implement bookmark post logic
+    //收藏取消收藏
+    private void CollectOrunCollectPost(Long postId){
+        new Thread(()->{
+            try {
+                // Create JSON object
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("collectId", postId);
+                jsonObject1.put("type",0);
+
+                RequestBody requestBody = RequestBody.create(
+                        jsonObject1.toString(),
+                        MediaType.get("application/json; charset=utf-8")
+                );
+
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                        .build();
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl + "api/post/collectPost")
+                        .post(requestBody)
+                        .build();
+                Response response = okHttpClient.newCall(request).execute();
+                String responseBody = response.body().string();
+                JSONObject jsonObject = new JSONObject(responseBody);
+                int code = jsonObject.getInt("code");
+                if (code == 0) {
+                    JSONObject userData = jsonObject.getJSONObject("data");
+                    Long collectNum = userData.getLong("collectNum");
+                    runOnUiThread(()->{
+                        if(isCollect){
+                            isCollect= false;
+                            Toast.makeText(this,"取消收藏成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            isCollect = true;
+                            Toast.makeText(this,"收藏成功",Toast.LENGTH_SHORT).show();
+                        }
+                        updatecollectButton();
+                        collectCount.setText(String.valueOf(collectNum));
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void postComment(Long postId) {

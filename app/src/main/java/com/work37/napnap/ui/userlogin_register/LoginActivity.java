@@ -60,7 +60,7 @@ public class LoginActivity extends PublicActivity {
     private Button registerButton;
     private Button loginButton;
 
-    private SharedPreferences preferences;
+//    private SharedPreferences preferences;
 
     private ProgressBar progressBar;
 
@@ -72,7 +72,7 @@ public class LoginActivity extends PublicActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        preferences = LoginActivity.this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        //preferences = LoginActivity.this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         setContentView(binding.getRoot());
         loginViewModel = new ViewModelProvider(this,new LoginViewModelFactory(getApplicationContext()))
                 .get(LoginViewModel.class);
@@ -90,8 +90,6 @@ public class LoginActivity extends PublicActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-//                        Intent intent = new Intent(this,PersonalityFragment.class);
-//                        startActivity(intent);
                         finish();
                     }
                 });
@@ -120,11 +118,9 @@ public class LoginActivity extends PublicActivity {
                     Log.d("ccc","登陆成功");
                     JSONObject data = loginReponse.getData();
                     try {
-                        User user = new User(data.getLong("id"),data.getString("userAccount"),data.getString("userName"),data.getInt("fansNum")
+                        User user = new User(data.getLong("id"),data.getString("userName"),data.getInt("fansNum")
                         ,data.getInt("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
                         PublicApplication.setCurrentUser(user);
-                        // 更新 PersonalityFragment 的用户信息
-//                    updateUiWithUser(data);
                         setResult(Activity.RESULT_OK,new Intent());
                         finish();
                     } catch (JSONException e) {
@@ -136,6 +132,9 @@ public class LoginActivity extends PublicActivity {
                 }
             }
         });
+        if(PublicApplication.getCurrentUser()!=null&&PublicApplication.getCurrentUser().getUserAccount()!=null){
+            usernameInput.setText(PublicApplication.getCurrentUser().getUserAccount());
+        }
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override

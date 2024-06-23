@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".detail.UserDetailActivity">
+
+    <!-- Toolbar with back button -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            android:contentDescription="Back" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- User Information Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/baseline_person_24"
+            android:contentDescription="User Avatar" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="16dp">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Name"
+                android:textSize="18sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/user_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Account"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- User Stats Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+
+        <TextView
+            android:id="@+id/user_follows"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关注: 0"
+            android:layout_marginRight="16dp" />
+
+        <TextView
+            android:id="@+id/user_followers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="粉丝: 0" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/follow_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关注"
+        android:layout_gravity="end" />
+
+    <!-- Tabs Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/tab_posts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="动态" />
+
+        <Button
+            android:id="@+id/tab_apps"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="收藏APP" />
+
+        <Button
+            android:id="@+id/tab_articles"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="收藏帖子" />
+    </LinearLayout>
+
+    <!-- RecyclerView for displaying content -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp" />
+</LinearLayout>

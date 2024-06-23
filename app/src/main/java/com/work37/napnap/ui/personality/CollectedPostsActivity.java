@@ -2,6 +2,8 @@ package com.work37.napnap.ui.personality;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -12,16 +14,25 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.work37.napnap.Adaptor.GameAdaptor;
 import com.work37.napnap.Adaptor.PostAdaptor;
+import com.work37.napnap.Game.GameRequest;
+import com.work37.napnap.Game.PostRequest;
 import com.work37.napnap.R;
+import com.work37.napnap.entity.Game;
 import com.work37.napnap.entity.Post;
+import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.UrlConstant;
+import com.work37.napnap.ui.search.GameResponse;
+import com.work37.napnap.ui.search.PostResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,159 +44,130 @@ import okhttp3.Response;
 
 public class CollectedPostsActivity extends PublicActivity {
 
-//    private RecyclerView recyclerView;
-//    private PostAdaptor postAdaptor;
-//    private ProgressBar progressBar;
-//    private TextView errorTextView;
-//
-//    private ImageButton backbutton;
-//    private boolean isLoading = false;
-//    private int currentPage = 1;
-//    private int pageSize = 10;
-//
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_collected_posts);
-//
-//        recyclerView = findViewById(R.id.recycler_view);
-//        progressBar = findViewById(R.id.progress_bar);
-//        errorTextView = findViewById(R.id.error_text_view);
-//        backbutton = findViewById(R.id.backButton);
-//
-//        postAdaptor = new PostAdaptor(new ArrayList<Post>(), this::openPostDetail);
-//        recyclerView.setAdapter(postAdaptor);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//
-//        fetchPosts(currentPage, pageSize);
-//
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-//                    loadMorePosts();
-//                }
-//            }
-//        });
-//
-//        backbutton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-//    }
-//
-//    private void loadMorePosts() {
-//        isLoading = true;
-//        currentPage++;
-//        fetchPosts(currentPage, pageSize);
-//    }
-//
-//    private void fetchPosts(int currentPage, int pageSize) {
-//        showLoading();
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("current", currentPage);
-//            json.put("pagesize", pageSize);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        new Thread(() -> {
-//            OkHttpClient client = new OkHttpClient();
-//            RequestBody requestBody = RequestBody.create(json.toString(), MediaType.get("application/json; charset=utf-8"));
-//            Request request = new Request.Builder()
-//                    .url(UrlConstant.baseUrl + "/api/user/collectedPosts")
-//                    .post(requestBody)
-//                    .build();
-//
-//            try {
-//                Response response = client.newCall(request).execute();
-//                String responseBody = response.body().string();
-//                JSONObject jsonObject = new JSONObject(responseBody);
-//                int code = jsonObject.getInt("code");
-//                String message = jsonObject.getString("message");
-//                if (code == 0) {
-//                    JSONArray data = jsonObject.getJSONArray("data");
-//                    List<Post> posts = parsePosts(data);
-//                    runOnUiThread(() -> {
-//                        updateUI(posts);
-//                        hideLoading();
-//                    });
-//                } else {
-//                    runOnUiThread(() -> {
-//                        showError(message);
-//                        hideLoading();
-//                    });
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                runOnUiThread(() -> {
-//                    showError("请求失败");
-//                    hideLoading();
-//                });
-//            }
-//        }).start();
-//    }
-//
-//    private List<Post> parsePosts(JSONArray data) throws JSONException {
-//        List<Post> posts = new ArrayList<>();
-//        for (int i = 0; i < data.length(); i++) {
-//            JSONObject jsonPost = data.getJSONObject(i);
-//            Post post = new Post();
-//            post.setUserId((int)jsonPost.getLong("userId"));
-//            post.setTitle(jsonPost.getString("title"));
-//            post.setContent(jsonPost.getString("content"));
-//            post.setPicture(parsePictures(jsonPost.getJSONArray("pictures")));
-//            post.setTag(parseTags(jsonPost.getJSONArray("tag")));
-//            post.setLikes((int)jsonPost.getLong("likes"));
-//            post.setCollectNum((int)jsonPost.getLong("collectNum"));
-//            posts.add(post);
-//        }
-//        return posts;
-//    }
-//
-//    private List<String> parsePictures(JSONArray jsonArray) throws JSONException {
-//        List<String> list = new ArrayList<>();
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            list.add(jsonArray.getString(i));
-//        }
-//        return list;
-//    }
-//
-//    private List<String> parseTags(JSONArray jsonArray) throws JSONException {
-//        List<String> list = new ArrayList<>();
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            list.add(jsonArray.getString(i));
-//        }
-//        return list;
-//    }
-//
-//    private void showLoading() {
-//        progressBar.setVisibility(View.VISIBLE);
-//        errorTextView.setVisibility(View.GONE);
-//    }
-//
-//    private void hideLoading() {
-//        progressBar.setVisibility(View.GONE);
-//    }
-//
-//    private void showError(String message) {
-//        errorTextView.setText(message);
-//        errorTextView.setVisibility(View.VISIBLE);
-//    }
+    private RecyclerView recyclerView;
+    private PostAdaptor postAdaptor;
+    private List<Post> collectedPostList;
+    private boolean isLoading = false;
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private boolean isLastPage = false;
+    private boolean isFirstLoad = true;
 
-//    private void updateUI(List<Post> newPosts) {
-//        postAdaptor.addPosts(newPosts);
-//        isLoading = false;
-//    }
-//
-//    private void openPostDetail(Post post) {
-//        Intent intent = new Intent(this, PostDetailActivity.class);
-//        intent.putExtra("post", (CharSequence) post);
-//        startActivity(intent);
-//    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_collected_posts);
+
+        recyclerView = findViewById(R.id.recycler_view);
+        ImageButton backButton = findViewById(R.id.backButton);
+
+        // Set up back button
+        backButton.setOnClickListener(v -> finish());
+
+        // Initialize game list and adapter
+        collectedPostList = new ArrayList<>();
+        postAdaptor = new PostAdaptor(this, collectedPostList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(postAdaptor);
+
+        // Add scroll listener to RecyclerView for pagination
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == collectedPostList.size() - 1 && !isLoading && !isLastPage) {
+                    currentPage++;
+                    try {
+                        fetchCollectedGames();
+                    } catch (IOException | JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        // Fetch initial data
+        try {
+            fetchCollectedGames();
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        super.onResume();
+        if (!isFirstLoad) {
+            refreshPostList();
+        } else {
+            isFirstLoad = false;
+        }
+    }
+
+    private void refreshPostList() {
+        currentPage = 1;
+        isLastPage = false;
+        collectedPostList.clear();
+        postAdaptor.notifyDataSetChanged();
+        try {
+            fetchCollectedGames();
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void fetchCollectedGames() throws IOException, JSONException {
+        isLoading = true;
+
+        new Thread(() -> {
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                    .build();
+
+            PostRequest postRequest = new PostRequest();
+            postRequest .setCurrent(currentPage);
+            postRequest .setPageSize(pageSize);
+            postRequest .setSortField("");
+            Gson gson = new Gson();
+            String json = gson.toJson(postRequest);
+
+            RequestBody requestBody = RequestBody.create(
+                    json,
+                    MediaType.get("application/json; charset=utf-8")
+            );
+            Request request = new Request.Builder()
+                    .url(UrlConstant.baseUrl + "api/post/listAllPostByUserCollect")
+                    .post(requestBody)
+                    .build();
+            Response response;
+            String responseBody;
+            try {
+                response = okHttpClient.newCall(request).execute();
+                responseBody = response.body().string();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            PostResponse postResponse = gson.fromJson(responseBody, PostResponse.class);
+
+            if (postResponse.getCode() == 0) {
+                List<Post> records = postResponse.getData().getRecords();
+
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    collectedPostList.addAll(records);
+                    postAdaptor.notifyDataSetChanged();
+                    isLoading = false;
+                    if (records.size() < pageSize) {
+                        isLastPage = true;
+                    } else {
+                        isLoading = false;
+                    }
+                });
+            }
+        }).start();
+    }
 }
 

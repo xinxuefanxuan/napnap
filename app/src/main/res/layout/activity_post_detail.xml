@@ -88,25 +88,33 @@
             android:text="Posted on: "
             android:layout_weight="1" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <ImageButton
             android:id="@+id/likeButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/like"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/unlike"
             android:background="?attr/selectableItemBackgroundBorderless" />
 
         <TextView
             android:id="@+id/likeCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:text="0"
             android:layout_marginEnd="8dp" />
 
         <ImageButton
             android:id="@+id/bookmarkButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/baseline_search_24"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="60dp"
+            android:src="@drawable/uncollect"
             android:background="?attr/selectableItemBackgroundBorderless"
             />
 
@@ -114,6 +122,7 @@
             android:id="@+id/bookmarkCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:text="0" />
     </LinearLayout>
 

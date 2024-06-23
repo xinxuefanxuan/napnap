@@ -99,7 +99,6 @@ public class LoginToDataSource {
                 mutableLiveData.postValue(new LoginReponse("网络异常"));
                 e.printStackTrace();
             }
-
         }
     }
 }

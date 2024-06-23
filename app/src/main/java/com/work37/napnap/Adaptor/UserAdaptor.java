@@ -2,6 +2,7 @@ package com.work37.napnap.Adaptor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.work37.napnap.R;
-import com.work37.napnap.detail.UserProfileActivity;
+import com.work37.napnap.detail.UserDetailActivity;
 import com.work37.napnap.ui.userlogin_register.User;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public class UserAdaptor extends RecyclerView.Adapter<UserAdaptor.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = userList.get(position);
 
+        Log.d("abcd",user.toString());
+
         // Load user avatar (assuming you have a URL or resource)
         Glide.with(context)
                 .load(user.getUserAvatar())
@@ -53,7 +56,7 @@ public class UserAdaptor extends RecyclerView.Adapter<UserAdaptor.ViewHolder> {
         // Set click listener for view button
         holder.viewButton.setOnClickListener(v -> {
             // Implement view functionality here, e.g., navigate to user profile
-            Intent intent = new Intent(context, UserProfileActivity.class);
+            Intent intent = new Intent(context, UserDetailActivity.class);
             intent.putExtra("User", user);
             context.startActivity(intent);
         });

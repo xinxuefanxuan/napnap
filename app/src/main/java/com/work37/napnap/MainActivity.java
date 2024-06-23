@@ -47,9 +47,6 @@ public class MainActivity extends PublicActivity {
         loginViewModel = new ViewModelProvider(this,new LoginViewModelFactory(getApplicationContext()))
                 .get(LoginViewModel.class);
         getLoginUser();
-//        if(PublicApplication.getCurrentUser()==null){
-//            Toast.makeText(getApplicationContext(),"用户未登录，请先登录",Toast.LENGTH_SHORT).show();
-//        }
     }
 
     //初始化底部导航栏

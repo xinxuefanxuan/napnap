@@ -18,7 +18,7 @@ public class User implements Cloneable, Serializable {
 
     @PrimaryKey
     @NonNull
-    private Long uid;
+    private Long id;
     private String userAccount;
     private String userName;
     public int fanNum;
@@ -37,14 +37,21 @@ public class User implements Cloneable, Serializable {
 
     @Ignore
     public User(Long uid,String userAccount,String userAvatar){
-        this.uid = uid;
+        this.id = uid;
         this.userAccount = userAccount;
+        this.userAvatar = userAvatar;
+    }
+
+    @Ignore
+    public User(String userAccount,String userName,String userAvatar){
+        this.userAccount = userAccount;
+        this.userName = userName;
         this.userAvatar = userAvatar;
     }
 
     public User(JSONObject data) {
         try {
-            this.uid = data.getLong("id");
+            this.id = data.getLong("id");
             this.userAccount = data.getString("userAccount");
             this.userName = data.getString("username");
             this.userAvatar = data.getString("avatar");
@@ -58,6 +65,7 @@ public class User implements Cloneable, Serializable {
         }
     }
 
+
     @Nullable
     public String getUserAvatar() {
         return userAvatar;
@@ -70,7 +78,7 @@ public class User implements Cloneable, Serializable {
 
     @Ignore
     public User(Long uid, String userAccount, String userName,int fanNum, int followNum,@Nullable String profile,@Nullable String userAvator) {
-        this.uid = uid;
+        this.id = uid;
         this.userAccount = userAccount;
         this.userName = userName;
         this.fanNum = fanNum;
@@ -81,7 +89,7 @@ public class User implements Cloneable, Serializable {
 
     @Ignore
     public User(Long uid, String userName,int fanNum, int followNum,@Nullable String profile,@Nullable String userAvator) {
-        this.uid = uid;
+        this.id = uid;
         this.userName = userName;
         this.fanNum = fanNum;
         this.followNum = followNum;
@@ -117,12 +125,12 @@ public class User implements Cloneable, Serializable {
         this.userName = userName;
     }
 
-    public Long getUid() {
-        return uid;
+    public Long getId() {
+        return id;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public void setId(Long uid) {
+        this.id = uid;
     }
 
 
@@ -154,7 +162,7 @@ public class User implements Cloneable, Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "uid=" + uid +
+                "uid=" + id +
                 ", userAccount='" + userAccount + '\'' +
                 ", username='" + userName + '\'' +
                 ", fanNum=" + fanNum +

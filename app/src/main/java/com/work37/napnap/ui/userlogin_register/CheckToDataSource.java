@@ -60,7 +60,8 @@ public class CheckToDataSource {
         public void run() {
             try{
                 Dns dns = new Dns() {
-                    @Override public List<InetAddress> lookup(String hostname) throws UnknownHostException {
+                    @Override
+                    public List<InetAddress> lookup(String hostname) throws UnknownHostException {
                         List<InetAddress> inetAddresses = new ArrayList<>();
                         try {
                             // 使用 Google 的公共 DNS 服务器进行解析
