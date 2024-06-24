@@ -6,21 +6,23 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.GameAdaptor;
-import com.work37.napnap.Game.GameRequest;
+import com.work37.napnap.RequestAndResponse.GameRequest;
 import com.work37.napnap.databinding.FragmentTagfilteredGamelistBinding;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;
-import com.work37.napnap.ui.search.GameResponse;
+import com.work37.napnap.RequestAndResponse.GameResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class FragmentFindGameList extends Fragment {
     private FragmentTagfilteredGamelistBinding binding;
     private static final String ARG_TAGS = "tags";
     private List<String> tags;
+    private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private GameAdaptor gameAdaptor;
     private List<Game> gameListA;
@@ -66,13 +69,19 @@ public class FragmentFindGameList extends Fragment {
         binding = FragmentTagfilteredGamelistBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         recyclerView =binding.recyclerView;
+        progressBar = binding.progressBar;
 
-        // Initialize game list and adapter
         gameListA = new ArrayList<>();
         gameAdaptor = new GameAdaptor(getContext(), gameListA);
 
+        //初始化recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(gameAdaptor);
+
+        // 添加分割线
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         // Add scroll listener to RecyclerView for pagination
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -107,6 +116,7 @@ public class FragmentFindGameList extends Fragment {
 
     private void fetchGameData() {
         isLoading = true;
+        getActivity().runOnUiThread(()->progressBar.setVisibility(View.VISIBLE));
 
         // Create Retrofit instance
         new Thread(() -> {
@@ -147,6 +157,7 @@ public class FragmentFindGameList extends Fragment {
                     gameListA.addAll(records);
                     gameAdaptor.notifyDataSetChanged(); // 更新Adapter数据
                     isLoading = false;
+                    progressBar.setVisibility(View.GONE);
                     if (records.size() < pageSize) {
                         isLastPage = true;
                     } else {

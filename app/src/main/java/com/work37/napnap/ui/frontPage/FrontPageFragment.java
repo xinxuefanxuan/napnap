@@ -15,7 +15,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.work37.napnap.Adaptor.GameAdaptor;
-import com.work37.napnap.GameListFragment;
 import com.work37.napnap.R;
 import com.work37.napnap.databinding.FragmentFrontpageBinding;
 import com.work37.napnap.entity.Game;

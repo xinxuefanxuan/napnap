@@ -37,7 +37,6 @@ import com.work37.napnap.databinding.ActivityLoginBinding;
 import com.work37.napnap.global.GlobalResponse;
 import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.PublicApplication;
-import com.work37.napnap.service.ApiServices;
 import com.work37.napnap.ui.personality.PersonalityFragment;
 
 import org.json.JSONException;
@@ -120,6 +119,7 @@ public class LoginActivity extends PublicActivity {
                     try {
                         User user = new User(data.getLong("id"),data.getString("userName"),data.getLong("fansNum")
                         ,data.getLong("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
+                        user.setUserAccount(data.getString("userAccount"));
                         PublicApplication.setCurrentUser(user);
                         setResult(Activity.RESULT_OK,new Intent());
                         finish();

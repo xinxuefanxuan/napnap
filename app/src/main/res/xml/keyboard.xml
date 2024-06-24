@@ -1,0 +1,24 @@
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="10%p"
+    android:horizontalGap="0px"
+    android:verticalGap="0px"
+    android:keyHeight="60dp">
+
+    <Row>
+        <!-- Custom key for opening gallery -->
+        <Key android:codes="-1" android:keyLabel="📷" android:keyWidth="20%p"/>
+        <!-- Example keys -->
+        <Key android:codes="97" android:keyLabel="a"/>
+        <Key android:codes="98" android:keyLabel="b"/>
+        <Key android:codes="99" android:keyLabel="c"/>
+    </Row>
+
+    <Row>
+        <Key android:codes="100" android:keyLabel="d"/>
+        <Key android:codes="101" android:keyLabel="e"/>
+        <Key android:codes="102" android:keyLabel="f"/>
+        <!-- Add more keys as needed -->
+    </Row>
+
+    <!-- Add more rows as needed -->
+</Keyboard>

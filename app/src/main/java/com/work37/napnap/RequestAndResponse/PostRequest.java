@@ -1,4 +1,4 @@
-package com.work37.napnap.Game;
+package com.work37.napnap.RequestAndResponse;
 
 public class PostRequest {
     private int current;

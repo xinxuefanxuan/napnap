@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.PostAdaptor;
-import com.work37.napnap.Game.PostRequest;
+import com.work37.napnap.RequestAndResponse.PostRequest;
 import com.work37.napnap.R;
 import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.global.UrlConstant;
-import com.work37.napnap.ui.search.PostResponse;
+import com.work37.napnap.RequestAndResponse.PostResponse;
 
 import org.json.JSONException;
 

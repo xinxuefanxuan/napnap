@@ -1,4 +1,4 @@
-package com.work37.napnap;
+package com.work37.napnap.detail;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.work37.napnap.R;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
@@ -33,9 +34,9 @@ import okhttp3.Response;
 
 public class GameDetailActivity extends PublicActivity {
     private boolean collected = false;
-    private Button likeButton;
     private TextView gameScore;
     private TextView gameFavorites;
+    private Button likeButton;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -230,6 +231,10 @@ public class GameDetailActivity extends PublicActivity {
         }).start();
     }
 
+    /**
+     * 是否收藏
+     * @param game
+     */
     private void isCollected(Game game) {
         new Thread(() -> {
             JSONObject jsonObject1 = new JSONObject();

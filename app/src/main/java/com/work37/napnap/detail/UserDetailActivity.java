@@ -1,7 +1,6 @@
 package com.work37.napnap.detail;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,20 +15,16 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.GameAdaptor;
 import com.work37.napnap.Adaptor.PostAdaptor;
-import com.work37.napnap.R;
 import com.work37.napnap.databinding.ActivityUserDetailBinding;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
-import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.global.UrlConstant;
-import com.work37.napnap.ui.search.GameResponse;
-import com.work37.napnap.ui.search.PostResponse;
-import com.work37.napnap.ui.userlogin_register.LoginReponse;
+import com.work37.napnap.RequestAndResponse.GameResponse;
+import com.work37.napnap.RequestAndResponse.PostResponse;
 import com.work37.napnap.ui.userlogin_register.User;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

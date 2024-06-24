@@ -1,5 +1,6 @@
 package com.work37.napnap.ui.personality;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,7 +25,10 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.work37.napnap.databinding.ActivityEditProfileBinding;
@@ -31,6 +36,7 @@ import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.global.UrlConstant;
+import com.work37.napnap.ui.community.AddPostActivity;
 import com.work37.napnap.ui.userlogin_register.User;
 
 import org.json.JSONObject;
@@ -51,6 +57,7 @@ import okhttp3.Response;
 public class EditProfileActivity extends PublicActivity {
 
     private ActivityEditProfileBinding binding;
+    private Uri imageUri;
     private ImageView userAvatar;
     private ImageView back;
     private EditText editUserName;
@@ -58,7 +65,17 @@ public class EditProfileActivity extends PublicActivity {
     private Button editButton;
     private boolean isEditing = false;
     private User currentUser;
-    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private final ActivityResultLauncher<Intent> pickImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null) {
+                                imageUri = data.getData();
+                                new UploadImageTask().execute(imageUri);
+                            }
+                        }
+                    });
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -88,18 +105,18 @@ public class EditProfileActivity extends PublicActivity {
         }
 
 
-        pickImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Uri selectedImageUri = result.getData().getData();
-                        if (selectedImageUri != null) {
-                            userAvatar.setImageURI(selectedImageUri);
-                            this.selectedImageUri = selectedImageUri;
-                            uploadAvatar(selectedImageUri);
-                        }
-                    }
-                });
+//        pickImageLauncher = registerForActivityResult(
+//                new ActivityResultContracts.StartActivityForResult(),
+//                result -> {
+//                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+//                        Uri selectedImageUri = result.getData().getData();
+//                        if (selectedImageUri != null) {
+//                            userAvatar.setImageURI(selectedImageUri);
+//                            this.selectedImageUri = selectedImageUri;
+//                            uploadAvatar(selectedImageUri);
+//                        }
+//                    }
+//                });
 
         userAvatar.setOnClickListener(v -> {
             if (isEditing) {
@@ -116,6 +133,103 @@ public class EditProfileActivity extends PublicActivity {
                 enterEditMode();
             }
         });
+    }
+
+    private class UploadImageTask extends AsyncTask<Uri, Void, String> {
+        @Override
+        protected String doInBackground(Uri... params) {
+            try {
+                return uploadImageToServer(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null) {
+//                picturePaths.add(result);
+//                addImageToLayout(result);
+                uploadedImageUrl = result;
+                Toast.makeText(getApplicationContext(), "头像上传成功", Toast.LENGTH_SHORT).show();
+                Glide.with(getApplicationContext()).load(result).into(userAvatar);
+            } else {
+                Toast.makeText(getApplicationContext(), "头像上传失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, 1);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                openImagePicker();
+            } else {
+                Toast.makeText(this, "Permission denied to read media images", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //打开相册选择新图片
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickImageLauncher.launch(intent);
+    }
+
+    private String uploadImageToServer(Uri imageUri) throws Exception {
+        String url = null;
+
+        // 获取 URI 对应的真实路径
+        String filePath = getRealPathFromURI(imageUri);
+        File file = new File(filePath);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                .build();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(),
+                        RequestBody.create(file, MediaType.get("image/*")))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(UrlConstant.baseUrl + "api/image/upload")
+                .post(requestBody)
+                .build();
+
+        Response response = okHttpClient.newCall(request).execute();
+        String responseBody = response.body().string();
+        JSONObject jsonObject = new JSONObject(responseBody);
+        int code = jsonObject.getInt("code");
+        String message = jsonObject.getString("message");
+        if (code == 0) {
+            url = jsonObject.getString("data");
+        }
+
+        return url;
+    }
+
+    private String getRealPathFromURI(Uri uri) {
+        String result;
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if (cursor == null) { // 来源是 Dropbox 或其他类似的本地文件路径
+            result = uri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 
 
@@ -141,11 +255,6 @@ public class EditProfileActivity extends PublicActivity {
         isEditing = true;
     }
 
-    //打开相册选择新图片
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickImageLauncher.launch(intent);
-    }
 
     //获取图图片路径
     private String getPathFromUri(Uri uri) {
@@ -182,9 +291,9 @@ public class EditProfileActivity extends PublicActivity {
         String newUserName = editUserName.getText().toString().trim();
         String newUserProfile = editUserProfile.getText().toString().trim();
 
-        // 更新本地用户信息
-        currentUser.setUserName(newUserName);
-        currentUser.setProfile(newUserProfile);
+//        // 更新本地用户信息
+//        currentUser.setUserName(newUserName);
+//        currentUser.setProfile(newUserProfile);
 
         // 发送更新请求到后端
         sendUpdateRequest();

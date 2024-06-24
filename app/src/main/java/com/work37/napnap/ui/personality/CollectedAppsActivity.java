@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.GameAdaptor;
-import com.work37.napnap.Game.GameRequest;
 import com.work37.napnap.global.PublicApplication;
-import com.work37.napnap.ui.search.GameResponse;
+import com.work37.napnap.RequestAndResponse.GameResponse;
 import com.work37.napnap.R;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;

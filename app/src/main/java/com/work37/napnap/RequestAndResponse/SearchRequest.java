@@ -1,4 +1,4 @@
-package com.work37.napnap.ui.search;
+package com.work37.napnap.RequestAndResponse;
 
 import java.util.List;
 

@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/community"
-        android:name="com.work37.napnap.ui.community.CommunityFragment"
+        android:name="com.work37.napnap.ui.community.FragmentCommunity"
         android:label="@string/community"
         tools:layout="@layout/fragment_community" />
 

@@ -10,13 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.work37.napnap.GameDetailActivity;
+import com.work37.napnap.detail.GameDetailActivity;
 import com.work37.napnap.R;
 import com.work37.napnap.entity.Game;
 

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#f5f5f5">
 
     <!-- 上方区域，包括头像、用户名、发布时间、标签 -->
     <LinearLayout
@@ -19,15 +20,15 @@
             android:layout_height="64dp"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
-            />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginEnd="8dp"/>
 
         <!-- 用户名、发布时间、标签 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingStart="8dp">
+            android:orientation="vertical">
 
             <!-- 用户名 -->
             <TextView
@@ -35,7 +36,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:layout_marginBottom="4dp" />
 
             <!-- 发布时间 -->
             <TextView
@@ -44,7 +48,8 @@
                 android:layout_height="wrap_content"
                 android:text="Timestamp"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:layout_marginBottom="2dp" />
 
             <!-- 标签 -->
             <TextView
@@ -63,7 +68,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post Title"
-        android:textSize="18sp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
         android:paddingBottom="4dp" />
 
     <!-- 正文内容 -->
@@ -73,6 +80,7 @@
         android:layout_height="wrap_content"
         android:text="Post Content"
         android:textSize="14sp"
+        android:textColor="#555555"
         android:ellipsize="end"
         android:maxLines="1"
         android:layout_marginTop="4dp" />
@@ -83,6 +91,8 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-         />
+        android:layout_marginTop="8dp"
+        />
 </LinearLayout>
+
 
