@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.community.CommunityFragment"
+    tools:context=".ui.community.FragmentCommunity"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/tag"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
 
@@ -22,123 +22,76 @@
             android:textSize="20sp"
             android:padding="16dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:scrollbars="none">
+
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="4">
+                android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_all"
+                    style="@style/category_button_selected"
+                    android:text="全部" />
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_technology"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="技术" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_amuse"
-                    android:layout_width="0dp"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="娱乐" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_sports"
-                    android:layout_width="0dp"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="体育" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_health"
-                    android:layout_width="0dp"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="健康" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="4">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_education"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="教育" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_new"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="新闻" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_game"
-                    android:layout_width="0dp"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="游戏" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_travel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="旅游" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/white_rounded_background"
-                android:orientation="horizontal"
-                android:weightSum="4">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_food"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/white_rounded_background"
+                    style="@style/category_button_unselected"
                     android:text="美食" />
-                <!-- 添加空白视图来补全最后一行的布局，使其与其他行对齐 -->
-                <Button
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_culture"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/white_rounded_background"
-                    android:layout_weight="1"
+                    style="@style/category_button_unselected"
                     android:text="文化" />
 
-<!--                <View-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
-
-<!--                <View-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
             </LinearLayout>
-        </LinearLayout>
+        </HorizontalScrollView>
 
 
         <FrameLayout
@@ -156,9 +109,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/addpost"
-        app:layout_constraintBottom_toBottomOf="@+id/tag"
-        app:layout_constraintEnd_toEndOf="@+id/tag" />
+        android:background="@drawable/addimage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 

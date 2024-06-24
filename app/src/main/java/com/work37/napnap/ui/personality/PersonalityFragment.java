@@ -193,8 +193,8 @@ public class PersonalityFragment extends Fragment {
             User user = PublicApplication.getCurrentUser();
             binding.username.setText(user.getUserName());
             binding.userAccount.setText(user.getUserAccount());
-            binding.followingCount.setText(String.valueOf(user.getFollowNum()));
-            binding.followersCount.setText(String.valueOf(user.getFanNum()));
+            binding.followersCount.setText("粉丝:"+user.getFanNum());
+            binding.followingCount.setText("关注:"+user.getFollowNum());
             binding.viewProfileButton.setEnabled(true);//查看资料按钮不可点击
             binding.btnCollectionApp.setEnabled(true);
             binding.btnCollectionPost.setEnabled(true);

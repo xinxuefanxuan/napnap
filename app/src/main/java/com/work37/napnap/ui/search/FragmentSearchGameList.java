@@ -42,6 +42,7 @@ public class FragmentSearchGameList extends Fragment {
     private int pageSize = 10;
     private boolean isLastPage = false;
     private boolean isFirstLoad = true;
+    private boolean hasMoreData;
 
     @Nullable
     @Override
@@ -58,6 +59,8 @@ public class FragmentSearchGameList extends Fragment {
         recyclerView.setAdapter(gameAdaptor);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        hasMoreData = true;
+
         // 添加分割线
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -67,7 +70,7 @@ public class FragmentSearchGameList extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == gameList.size() - 1 && !isLoading && !isLastPage) {
+                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == gameList.size() - 1 && !isLoading && !isLastPage&&hasMoreData) {
                     currentPage++;
                     fetchGameData("");
                 }
@@ -92,6 +95,7 @@ public class FragmentSearchGameList extends Fragment {
         currentPage = 1;
         isLastPage = false;
         gameList.clear();
+        hasMoreData = true;
         gameAdaptor.notifyDataSetChanged();
         fetchGameData("");
     }
@@ -135,7 +139,9 @@ public class FragmentSearchGameList extends Fragment {
             }
 
             List<Game> records = gson.fromJson(responseBody,GameResponse.class).getData().getRecords();
-
+            if(records.size()<10){
+                hasMoreData = false;
+            }
             new Handler(Looper.getMainLooper()).post(() -> {
                 gameList.addAll(records);
                 gameAdaptor.notifyDataSetChanged();

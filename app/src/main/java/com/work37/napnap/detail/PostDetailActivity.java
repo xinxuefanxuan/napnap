@@ -2,13 +2,19 @@ package com.work37.napnap.detail;
 
 import android.annotation.SuppressLint;
 import android.content.ClipDescription;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.os.BuildCompat;
 import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.core.view.inputmethod.InputConnectionCompat;
@@ -26,9 +33,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.CommentAdapter;
+import com.work37.napnap.Adaptor.ImagePagerAdapter;
 import com.work37.napnap.Adaptor.PostAdaptor;
+import com.work37.napnap.Game.CommentRequest;
 import com.work37.napnap.Game.PostRequest;
 import com.work37.napnap.Game.PostResponse;
 import com.work37.napnap.R;
@@ -38,6 +48,7 @@ import com.work37.napnap.entity.CommentUnderPostVO;
 import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
+import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.global.UrlConstant;
 import com.work37.napnap.ui.search.GameResponse;
 import com.work37.napnap.ui.userlogin_register.User;
@@ -56,8 +67,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import cn.hutool.core.bean.BeanUtil;
-import okhttp3.FormBody;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -66,10 +76,12 @@ import okhttp3.Response;
 import retrofit2.Callback;
 
 public class PostDetailActivity extends PublicActivity {
+    private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView userAvatar;
     private TextView username;
-    private Button followButton;
+//    private Button followButton;
     private ViewPager viewPager;
+    private TabLayout tabLayout;
     private TextView postTitle;
     private TextView postContent;
     private TextView postTimestamp;
@@ -85,7 +97,7 @@ public class PostDetailActivity extends PublicActivity {
     private List<CommentAndUser> list;
 
     private int currentPage = 1;
-    private final int pageSize = 10;
+    private final int pageSize = 5;
     private boolean isLoading = false;
 
     private boolean isLastPage = false;
@@ -96,10 +108,14 @@ public class PostDetailActivity extends PublicActivity {
     private boolean isCollect;
     private ImageView myAvatar;
     private EditText commentInput;
-    //是否关注发贴用户
-    private boolean isConcern;
 
-    @SuppressLint("AppCompatCustomView")
+    private ImageButton galleryButton;
+
+    private String comment;
+    //是否关注发贴用户
+//    private boolean isConcern;
+
+    @SuppressLint({"AppCompatCustomView", "MissingInflatedId", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,8 +137,9 @@ public class PostDetailActivity extends PublicActivity {
         // 初始化组件
         userAvatar = findViewById(R.id.userAvatar);
         username = findViewById(R.id.username);
-        followButton = findViewById(R.id.followButton);
+//        followButton = findViewById(R.id.followButton);
         viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
         postTitle = findViewById(R.id.postTitle);
         postContent = findViewById(R.id.postContent);
         postTimestamp = findViewById(R.id.postTimestamp);
@@ -133,62 +150,38 @@ public class PostDetailActivity extends PublicActivity {
         myAvatar = findViewById(R.id.myAvatar);
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
         commentInput = findViewById(R.id.commentInput);
+//        galleryButton = findViewById(R.id.galleryButton);
 
-        //这个代码很关键，但是我也不知道他是干什么的
-        commentInput = new EditText(this) {
+        commentInput.setOnTouchListener((v, event) -> {
+            commentInput.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(commentInput, InputMethodManager.SHOW_IMPLICIT);
+            return false;
+        });
+
+        TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
-            public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
-                final InputConnection ic = super.onCreateInputConnection(editorInfo);
-                EditorInfoCompat.setContentMimeTypes(editorInfo,
-                        new String [] {"image/png"});
-
-                final InputConnectionCompat.OnCommitContentListener callback =
-                        new InputConnectionCompat.OnCommitContentListener() {
-                            @Override
-                            public boolean onCommitContent(InputContentInfoCompat inputContentInfo,
-                                                           int flags, Bundle opts) {
-                                // read and display inputContentInfo asynchronously
-                                if (BuildCompat.isAtLeastNMR1() && (flags &
-                                        InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
-                                    try {
-                                        inputContentInfo.requestPermission();
-                                    }
-                                    catch (Exception e) {
-                                        return false; // return false if failed
-                                    }
-                                }
-
-                                // read and display inputContentInfo asynchronously.
-                                // call inputContentInfo.releasePermission() as needed.
-
-                                return true;  // return true if succeeded
-                            }
-                        };
-                return InputConnectionCompat.createWrapper(ic, editorInfo, callback);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
             }
-            public void onStartInputView(EditorInfo info, boolean restarting) {
-                String[] mimeTypes = EditorInfoCompat.getContentMimeTypes(info);
 
-                boolean gifSupported = false;
-                for (String mimeType : mimeTypes) {
-                    if (ClipDescription.compareMimeTypes(mimeType, "image/gif")) {
-                        gifSupported = true;
-                    }
-                }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
 
-                if (gifSupported) {
-                    // the target editor supports GIFs. enable corresponding content
-                } else {
-                    // the target editor does not support GIFs. disable corresponding content
-                }
+            @Override
+            public void afterTextChanged(Editable s) {
+                comment = commentInput.getText().toString();
             }
         };
+        commentInput.addTextChangedListener(afterTextChangedListener);
+
 
         // Initialize RecyclerView
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        commentAdapter = new CommentAdapter(list, getApplicationContext());
+        commentAdapter = new CommentAdapter(list, PostDetailActivity.this);
         commentsRecyclerView.setAdapter(commentAdapter);
-
 
         //将一些开始就可以初始化的初始化
         postTitle.setText(title);
@@ -201,12 +194,23 @@ public class PostDetailActivity extends PublicActivity {
 
         collectCount.setText(String.valueOf(collectNum));
 
+        List<String> imageUrls = post.getPictures();
+        if(imageUrls==null){
+            viewPager.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.GONE);
+        }else{
+            ImagePagerAdapter adapter = new ImagePagerAdapter(this, imageUrls);
+            viewPager.setAdapter(adapter);
+            tabLayout.setupWithViewPager(viewPager, true);
+        }
+
+
         //对点赞按钮和收藏按钮进行初始化，判断是否之前就已经点赞过或者收藏过
         //对关注按钮也是，首先要获取该用户之前是否已经关注过他
         CompletableFuture<Void> voidCompletableFuture1 = CompletableFuture.runAsync(()->loadLikeAsync(postId));
         try {
             voidCompletableFuture1.get();
-            updateLikeButton();
+//            updateLikeButton();
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -214,7 +218,7 @@ public class PostDetailActivity extends PublicActivity {
         CompletableFuture<Void> voidCompletableFuture2 = CompletableFuture.runAsync(()->loadCollectAsync(postId));
         try {
             voidCompletableFuture2.get();
-            updatecollectButton();
+//            updatecollectButton();
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -222,17 +226,17 @@ public class PostDetailActivity extends PublicActivity {
         //获取帖子下面的评论
         loadComments(postId);
 
+        Glide.with(this).load(PublicApplication.getCurrentUser().getUserAvatar())
+                .into(myAvatar);
         // 获取发这个帖子的用户的信息
         CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> loadUserAsync(userId));
         try {
             completableFuture.get();
             User user = userCache.get(userId);
             if (user != null) {
-                if (user.getUserAvatar() != null) {
+                if (user.getUserAvatar() != null&&!user.getUserAvatar().equals("")) {
                     Glide.with(this).load(user.getUserAvatar())
                             .into(userAvatar);
-                    Glide.with(this).load(user.getUserAvatar())
-                            .into(myAvatar);
                 }else{
                     userAvatar.setVisibility(View.GONE);
                 }
@@ -261,7 +265,7 @@ public class PostDetailActivity extends PublicActivity {
         findViewById(R.id.backButton).setOnClickListener(v -> finish());
 
         // Handle follow button click
-        followButton.setOnClickListener(v -> followUser());
+        //followButton.setOnClickListener(v -> followUser());
 
         // Handle like button click
         likeButton.setOnClickListener(v -> likeOrUnlikePost(postId));
@@ -270,7 +274,31 @@ public class PostDetailActivity extends PublicActivity {
         collectButton.setOnClickListener(v -> CollectOrunCollectPost(postId));
 
         // Handle post comment button click
-        findViewById(R.id.postCommentButton).setOnClickListener(v -> postComment(postId));
+        findViewById(R.id.postCommentButton).setOnClickListener(v -> postComment(comment,postId));
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            // 这里你可以上传图片到服务器并获得图片的 URL
+            uploadImageToServer(imageUri);
+        }
+    }
+
+    private void uploadImageToServer(Uri imageUri) {
+        // 实现上传图片到服务器的逻辑，并获得图片的 URL
+        // 上传成功后，将 URL 添加到评论输入框
+        String imageUrl = "http://yourserver.com/path/to/image.jpg"; // 假设这是上传后的 URL
+        commentInput.append(imageUrl);
     }
 
 
@@ -357,6 +385,9 @@ public class PostDetailActivity extends PublicActivity {
 
         for (CommentUnderPostVO record : records) {
             CommentAndUser commentAndUser = copyCommentUnderPost(record);
+            if(commentAndUser.getCommentType()==0){
+                commentAndUser.setParentUser(null);
+            }
             futures.add(loadUserAsync(commentAndUser));
 
             List<CommentUnderPostVO> convertList = new ArrayList<>();
@@ -367,8 +398,8 @@ public class PostDetailActivity extends PublicActivity {
 
             for (CommentAndUser reply : collectConvertList) {
                 futures.add(loadUserAsync(reply));
+                futures.add(loadUserParentAsync(reply));
             }
-
             commentAndUser.setCommentAndUserList(collectConvertList);
             commentList.add(commentAndUser);
         }
@@ -381,6 +412,92 @@ public class PostDetailActivity extends PublicActivity {
 
     private CompletableFuture<Void> loadUserAsync(CommentAndUser commentAndUser) {
         return CompletableFuture.runAsync(() -> loadUser(commentAndUser));
+    }
+
+    private CompletableFuture<Void> loadUserParentAsync(CommentAndUser commentAndUser){
+        return CompletableFuture.runAsync(()->loadUserParent(commentAndUser));
+    }
+
+    /**
+     * 获取评论的父对象的信息
+     * @param commentAndUser
+     */
+    private void loadUserParent(CommentAndUser commentAndUser) {
+        Long parentId = commentAndUser.getParentId();
+        try {
+            // Create JSON object
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("current",1);
+            jsonObject1.put("pageSize",10);
+            jsonObject1.put("postId", parentId);
+            jsonObject1.put("sortField","");
+
+            RequestBody requestBody = RequestBody.create(
+                    jsonObject1.toString(),
+                    MediaType.get("application/json; charset=utf-8")
+            );
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(UrlConstant.baseUrl + "api/comment/getCommentById")
+                    .post(requestBody)
+                    .build();
+            Response response = okHttpClient.newCall(request).execute();
+            String responseBody = response.body().string();
+            JSONObject jsonObject = new JSONObject(responseBody);
+            int code = jsonObject.getInt("code");
+            JSONObject data = (JSONObject) jsonObject.get("data");
+            if (code == 0) {
+               Long uid = data.getLong("uid");
+                User user = fetchUserById(uid);
+                commentAndUser.setParentUser(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 根据id获取对象
+     * @param userId
+     * @return
+     */
+    private User fetchUserById(Long userId) {
+        try {
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("userId", userId);
+
+            RequestBody requestBody = RequestBody.create(
+                    jsonObject1.toString(),
+                    MediaType.get("application/json; charset=utf-8")
+            );
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(UrlConstant.baseUrl + "api/user/getUserById")
+                    .post(requestBody)
+                    .build();
+            Response response = okHttpClient.newCall(request).execute();
+            String responseBody = response.body().string();
+            JSONObject jsonObject = new JSONObject(responseBody);
+            int code = jsonObject.getInt("code");
+            if (code == 0) {
+                JSONObject userData = jsonObject.getJSONObject("data");
+                String username = userData.getString("userName");
+                User user = new User();
+                user.setUserName(username);
+                userCache.put(userId, user);
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -414,6 +531,12 @@ public class PostDetailActivity extends PublicActivity {
         if (user != null) {
             commentAndUser.setUsername(user.getUserName());
             commentAndUser.setUserAvatar(user.getUserAvatar());
+        }
+    }
+
+    private void postParentToVo(User user, CommentAndUser commentAndUser){
+        if(user!=null){
+            commentAndUser.setParentUser(user);
         }
     }
 
@@ -454,7 +577,40 @@ public class PostDetailActivity extends PublicActivity {
      * @param postId
      */
     private void loadLikeAsync(Long postId){
+        try {
+            // Create JSON object
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("postId", postId);
 
+            RequestBody requestBody = RequestBody.create(
+                    jsonObject1.toString(),
+                    MediaType.get("application/json; charset=utf-8")
+            );
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(UrlConstant.baseUrl + "api/post/isLikePost")
+                    .post(requestBody)
+                    .build();
+            Response response = okHttpClient.newCall(request).execute();
+            String responseBody = response.body().string();
+            JSONObject jsonObject = new JSONObject(responseBody);
+            int code = jsonObject.getInt("code");
+            boolean data = jsonObject.getBoolean("data");
+            if (code == 0) {
+                if(data){
+                    //已经关注过了
+                    isLike = true;
+                }else{
+                    isLike = false;
+                }
+                updateLikeButton();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -462,6 +618,40 @@ public class PostDetailActivity extends PublicActivity {
      * @param postId
      */
     private void loadCollectAsync(Long postId) {
+        try {
+            // Create JSON object
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("postId", postId);
+
+            RequestBody requestBody = RequestBody.create(
+                    jsonObject1.toString(),
+                    MediaType.get("application/json; charset=utf-8")
+            );
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(UrlConstant.baseUrl + "api/post/isCollectPost")
+                    .post(requestBody)
+                    .build();
+            Response response = okHttpClient.newCall(request).execute();
+            String responseBody = response.body().string();
+            JSONObject jsonObject = new JSONObject(responseBody);
+            int code = jsonObject.getInt("code");
+            boolean data = jsonObject.getBoolean("data");
+            if (code == 0) {
+                if(data){
+                    //已经收藏过了
+                    isCollect = true;
+                }else{
+                    isCollect = false;
+                }
+                updatecollectButton();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -503,7 +693,6 @@ public class PostDetailActivity extends PublicActivity {
             e.printStackTrace();
         }
     }
-
 
     /**
      * 将用户名称和头像封装到commentAndUser里面去
@@ -556,42 +745,42 @@ public class PostDetailActivity extends PublicActivity {
         Long userId = commentAndUser.getuId();
         if (userCache.containsKey(userId)) {
             postUserToVO(userCache.get(userId), commentAndUser);
-            return;
         }
+        CompletableFuture<Void> userFuture = CompletableFuture.runAsync(() -> {
+            try {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("userId", userId);
 
-        try {
-            JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("userId", userId);
+                RequestBody requestBody = RequestBody.create(
+                        jsonObject1.toString(),
+                        MediaType.get("application/json; charset=utf-8")
+                );
 
-            RequestBody requestBody = RequestBody.create(
-                    jsonObject1.toString(),
-                    MediaType.get("application/json; charset=utf-8")
-            );
-
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
-                    .build();
-            Request request = new Request.Builder()
-                    .url(UrlConstant.baseUrl + "api/user/getUserById")
-                    .post(requestBody)
-                    .build();
-            Response response = okHttpClient.newCall(request).execute();
-            String responseBody = response.body().string();
-            JSONObject jsonObject = new JSONObject(responseBody);
-            int code = jsonObject.getInt("code");
-            if (code == 0) {
-                JSONObject userData = jsonObject.getJSONObject("data");
-                String userAvatar = userData.getString("userAvatar");
-                String username = userData.getString("userName");
-                User user = new User();
-                user.setUserName(username);
-                user.setUserAvatar(userAvatar);
-                userCache.put(userId, user);
-                postUserToVO(user, commentAndUser);
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                        .build();
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl + "api/user/getUserById")
+                        .post(requestBody)
+                        .build();
+                Response response = okHttpClient.newCall(request).execute();
+                String responseBody = response.body().string();
+                JSONObject jsonObject = new JSONObject(responseBody);
+                int code = jsonObject.getInt("code");
+                if (code == 0) {
+                    JSONObject userData = jsonObject.getJSONObject("data");
+                    String userAvatar = userData.getString("userAvatar");
+                    String username = userData.getString("userName");
+                    User user = new User();
+                    user.setUserName(username);
+                    user.setUserAvatar(userAvatar);
+                    userCache.put(userId, user);
+                    postUserToVO(user, commentAndUser);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     private List<Comment> parseComments(String responseBody) {
@@ -601,9 +790,9 @@ public class PostDetailActivity extends PublicActivity {
     }
 
 
-    private void followUser() {
-
-    }
+//    private void followUser() {
+//
+//    }
 
     //点赞取消点赞
     private void likeOrUnlikePost(Long postId){
@@ -696,8 +885,60 @@ public class PostDetailActivity extends PublicActivity {
         }).start();
     }
 
-    private void postComment(Long postId) {
-        // Implement post comment logic
+    private void postComment(String comment,Long postId) {
+        new Thread(()->{
+            try {
+                ArrayList<String> list1 = new ArrayList<>();
+                CommentRequest commentRequest = new CommentRequest();
+                commentRequest.setComment(comment);
+                commentRequest.setPicture(list1);
+                commentRequest.setType(0);
+                commentRequest.setParentId(postId);
+                Gson gson = new Gson();
+                String json = gson.toJson(commentRequest);
+                RequestBody requestBody = RequestBody.create(
+                        json,
+                        MediaType.get("application/json; charset=utf-8")
+                );
+
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                        .build();
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl + "api/comment/addComment")
+                        .post(requestBody)
+                        .build();
+                Response response = okHttpClient.newCall(request).execute();
+                String responseBody = response.body().string();
+                JSONObject jsonObject = new JSONObject(responseBody);
+                int code = jsonObject.getInt("code");
+                if (code == 0) {
+                    runOnUiThread(()->{
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(commentInput.getWindowToken(), 0);
+                        }
+                        CommentAndUser commentAndUser = new CommentAndUser();
+                        commentAndUser.setUsername(PublicApplication.getCurrentUser().getUserName());
+                        commentAndUser.setUserAvatar(PublicApplication.getCurrentUser().getUserAvatar());
+                        commentAndUser.setParentId(postId);
+                        commentAndUser.setContent(comment);
+                        commentAndUser.setParentUser(null);
+                        commentAndUser.setCommentAndUserList(new ArrayList<>());
+//                        list.add(commentAndUser);
+//                        // Clear the input field
+                        commentInput.getText().clear();
+//                        currentPage = 1;
+//                        list.clear();
+//                        // Refresh the comments
+//                        loadComments(postId);
+                        commentAdapter.addComment(commentAndUser);
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
 

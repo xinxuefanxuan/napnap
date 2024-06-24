@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CommunityFragment extends Fragment {
+public class FragmentCommunity extends Fragment {
 
     private FragmentCommunityBinding binding;
     private Set<String> selectedTags = new HashSet<>();
@@ -54,59 +54,53 @@ public class CommunityFragment extends Fragment {
     }
     private void setupCategoryButtons() {
         // Set click listeners for all category buttons
-        binding.tvCategory.setOnClickListener(v -> {
+        binding.btnAll.setOnClickListener(v -> {
             selectedTags.clear();
             updateGameList();
             updateButtonStates();
         });
         binding.btnTechnology.setOnClickListener(v -> {
-            toggleTag("技术", binding.btnTechnology);
+            toggleTag("技术");
         });
         binding.btnCulture.setOnClickListener(v -> {
-            toggleTag("文化", binding.btnCulture);
+            toggleTag("文化");
         });
         binding.btnAmuse.setOnClickListener(v -> {
-            toggleTag("娱乐", binding.btnAmuse);
+            toggleTag("娱乐");
         });
         binding.btnFood.setOnClickListener(v -> {
-            toggleTag("美食", binding.btnFood);
+            toggleTag("美食");
         });
         binding.btnEducation.setOnClickListener(v -> {
-            toggleTag("教育", binding.btnEducation);
+            toggleTag("教育");
         });
         binding.btnGame.setOnClickListener(v -> {
-            toggleTag("游戏", binding.btnGame);
+            toggleTag("游戏");
         });
         binding.btnHealth.setOnClickListener(v -> {
-            toggleTag("健康", binding.btnHealth);
+            toggleTag("健康");
         });
         binding.btnNew.setOnClickListener(v -> {
-            toggleTag("新闻", binding.btnNew);
+            toggleTag("新闻");
         });
         binding.btnSports.setOnClickListener(v -> {
-            toggleTag("运动", binding.btnSports);
+            toggleTag("运动");
         });
         binding.btnTravel.setOnClickListener(v -> {
-            toggleTag("旅游", binding.btnTravel);
+            toggleTag("旅游");
         });
     }
 
     //    @SuppressLint("ResourceAsColor")
     @SuppressLint("ResourceAsColor")
-    private void toggleTag(String tag, Button button) {
+    private void toggleTag(String tag) {
         if (selectedTags.contains(tag)) {
             selectedTags.remove(tag);
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_button_color)); // 恢复默认颜色
         } else {
             selectedTags.add(tag);
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.selected_button_color)); // 选中颜色
         }
         updateGameList();
-        if (selectedTags.isEmpty()) {
-            binding.tvCategory.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.selected_button_color));
-        } else {
-            binding.tvCategory.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_button_color));
-        }
+        updateButtonStates();
     }
 
     private void updateGameList() {
@@ -116,7 +110,12 @@ public class CommunityFragment extends Fragment {
     }
     private void updateButtonStates() {
         // 更新所有按钮的颜色状态
-        binding.tvCategory.setBackgroundColor(selectedTags.isEmpty() ? ContextCompat.getColor(getContext(), R.color.selected_button_color): ContextCompat.getColor(getContext(), R.color.default_button_color));
+        binding.btnAll.setBackgroundResource(selectedTags.isEmpty() ?
+                R.drawable.category_button_selected_background :
+                R.drawable.category_button_unselected_background );
+        binding.btnAll.setTextColor(selectedTags.isEmpty() ?
+                ContextCompat.getColor(getContext(), R.color.category_button_selectedTextColor) :
+                ContextCompat.getColor(getContext(), R.color.category_button_unselectedTextColor));
         updateButtonState(binding.btnTechnology, "技术");
         updateButtonState(binding.btnCulture, "文化");
         updateButtonState(binding.btnAmuse, "娱乐");
@@ -132,9 +131,11 @@ public class CommunityFragment extends Fragment {
     @SuppressLint("ResourceAsColor")
     private void updateButtonState(Button button, String tag) {
         if (selectedTags.contains(tag)) {
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.selected_button_color));
+            button.setBackgroundResource(R.drawable.category_button_selected_background);
+            button.setTextColor(ContextCompat.getColor(getContext(), R.color.category_button_selectedTextColor));
         } else {
-            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_button_color));
+            button.setBackgroundResource(R.drawable.category_button_unselected_background);
+            button.setTextColor(ContextCompat.getColor(getContext(), R.color.category_button_unselectedTextColor));
         }
     }
     @Override
