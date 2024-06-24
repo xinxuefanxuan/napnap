@@ -113,8 +113,8 @@ public class CheckToDataSource {
                     JSONObject data = new JSONObject(jsonObject.getString("data"));
                     User user = null;
                     try {
-                        user = new User(data.getLong("id"),data.getString("userName"),data.getInt("fansNum")
-                                ,data.getInt("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
+                        user = new User(data.getLong("id"),data.getString("userName"),data.getLong("fansNum")
+                                ,data.getLong("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
                         PublicApplication.setCurrentUser(user);
                         mutableLiveData.postValue(new LoginReponse(data));
                     } catch (JSONException e) {

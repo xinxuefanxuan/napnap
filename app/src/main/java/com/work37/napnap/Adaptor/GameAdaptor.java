@@ -1,5 +1,6 @@
 package com.work37.napnap.Adaptor;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -70,6 +71,9 @@ public class GameAdaptor extends RecyclerView.Adapter<GameAdaptor.ViewHolder> {
             Intent intent = new Intent(context, GameDetailActivity.class);
             intent.putExtra("Game", game);
             Log.d("aaabbbccc", game.toString());
+            if (!(context instanceof Activity)) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
             context.startActivity(intent);
         });
     }

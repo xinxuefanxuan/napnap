@@ -59,6 +59,14 @@
                 android:text="User Account"
                 android:textSize="14sp"
                 android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/user_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User profile"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray" />
         </LinearLayout>
     </LinearLayout>
 

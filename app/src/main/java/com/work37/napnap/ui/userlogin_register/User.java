@@ -21,8 +21,8 @@ public class User implements Cloneable, Serializable {
     private Long id;
     private String userAccount;
     private String userName;
-    public int fanNum;
-    public int followNum;
+    public Long fansNum;
+    public Long focusNum;
 
     public String profile;
 
@@ -43,6 +43,13 @@ public class User implements Cloneable, Serializable {
     }
 
     @Ignore
+    public User(String userName,String userAvatar,Long id){
+        this.userName = userName;
+        this.userAvatar = userAvatar;
+        this.id = id;
+    }
+
+    @Ignore
     public User(String userAccount,String userName,String userAvatar){
         this.userAccount = userAccount;
         this.userName = userName;
@@ -55,8 +62,8 @@ public class User implements Cloneable, Serializable {
             this.userAccount = data.getString("userAccount");
             this.userName = data.getString("username");
             this.userAvatar = data.getString("avatar");
-            this.fanNum = (data.getInt("fansNum"));
-            this.followNum = (data.getInt("followNum"));
+            this.fansNum = (data.getLong("fansNum"));
+            this.focusNum = (data.getLong("focusNum"));
             this.profile = data.getString("profile");
 
         } catch (JSONException e) {
@@ -77,22 +84,22 @@ public class User implements Cloneable, Serializable {
     }
 
     @Ignore
-    public User(Long uid, String userAccount, String userName,int fanNum, int followNum,@Nullable String profile,@Nullable String userAvator) {
+    public User(Long uid, String userAccount, String userName,Long fansNum, Long focusNum,@Nullable String profile,@Nullable String userAvator) {
         this.id = uid;
         this.userAccount = userAccount;
         this.userName = userName;
-        this.fanNum = fanNum;
-        this.followNum = followNum;
+        this.fansNum = fansNum;
+        this.focusNum = focusNum;
         this.profile = profile;
         this.userAvatar=userAvator;
     }
 
     @Ignore
-    public User(Long uid, String userName,int fanNum, int followNum,@Nullable String profile,@Nullable String userAvator) {
+    public User(Long uid, String userName,Long fansNum, Long focusNum,@Nullable String profile,@Nullable String userAvator) {
         this.id = uid;
         this.userName = userName;
-        this.fanNum = fanNum;
-        this.followNum = followNum;
+        this.fansNum = fansNum;
+        this.focusNum = focusNum;
         this.profile = profile;
         this.userAvatar=userAvator;
     }
@@ -134,20 +141,20 @@ public class User implements Cloneable, Serializable {
     }
 
 
-    public int getFanNum() {
-        return fanNum;
+    public Long getFanNum() {
+        return fansNum;
     }
 
-    public void setFanNum(int fanNum) {
-        this.fanNum = fanNum;
+    public void setFanNum(Long fanNum) {
+        this.fansNum = fanNum;
     }
 
-    public int getFollowNum() {
-        return followNum;
+    public Long getFollowNum() {
+        return focusNum;
     }
 
-    public void setFollowNum(int followNum) {
-        this.followNum = followNum;
+    public void setFollowNum(Long followNum) {
+        this.focusNum = followNum;
     }
 
     @Nullable
@@ -165,8 +172,8 @@ public class User implements Cloneable, Serializable {
                 "uid=" + id +
                 ", userAccount='" + userAccount + '\'' +
                 ", username='" + userName + '\'' +
-                ", fanNum=" + fanNum +
-                ", followNum=" + followNum +
+                ", fanNum=" + fansNum +
+                ", followNum=" + focusNum +
                 ", profile='" + profile + '\'' +
                 ", userAvatar='" + userAvatar + '\'' +
                 '}';

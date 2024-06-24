@@ -35,6 +35,8 @@ public class MainActivity extends PublicActivity {
     private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
 
+    private boolean isFirstLoading;
+
     //用于从后端获取数据
     private LoginViewModel loginViewModel;
 
@@ -46,6 +48,13 @@ public class MainActivity extends PublicActivity {
         initBottomNavigation();
         loginViewModel = new ViewModelProvider(this,new LoginViewModelFactory(getApplicationContext()))
                 .get(LoginViewModel.class);
+        isFirstLoading = true;
+        getLoginUser();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getLoginUser();
     }
 
@@ -75,10 +84,13 @@ public class MainActivity extends PublicActivity {
                 Log.d("eee",loginReponse.toString());
 
                 if(loginReponse.isResultState()){
-                    Toast.makeText(getApplicationContext(),"用户已登录",Toast.LENGTH_SHORT).show();
+                    if(isFirstLoading){
+                        Toast.makeText(getApplicationContext(),"用户已登录",Toast.LENGTH_SHORT).show();
+                        isFirstLoading = false;
+                    }
                 }else{
                     navigateToLoginActivity();
-                    Toast.makeText(getApplicationContext(),"用户未登录，请先登录",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"用户未登录，请先登录",Toast.LENGTH_SHORT).show();
                     Log.d("ddd","登录失败");
                 }
 

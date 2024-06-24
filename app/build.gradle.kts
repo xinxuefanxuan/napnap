@@ -54,6 +54,8 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation("cn.hutool:hutool-all:5.8.28")
+    implementation ("androidx.core:core:1.10.1")
+    implementation ("androidx.emoji2:emoji2:1.3.0")  // 可选，支持 emoji
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

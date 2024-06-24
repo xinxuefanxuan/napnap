@@ -24,6 +24,7 @@ import com.work37.napnap.entity.Game;
 import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
+import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.global.UrlConstant;
 import com.work37.napnap.ui.search.GameResponse;
 import com.work37.napnap.ui.search.PostResponse;
@@ -131,6 +132,7 @@ public class CollectedPostsActivity extends PublicActivity {
             postRequest .setCurrent(currentPage);
             postRequest .setPageSize(pageSize);
             postRequest .setSortField("");
+            postRequest.setUserId(PublicApplication.getCurrentUser().getId());
             Gson gson = new Gson();
             String json = gson.toJson(postRequest);
 

@@ -6,6 +6,8 @@ public class PostRequest {
     private Long postId;
     private String sortField;
 
+    private Long userId;
+
     public PostRequest() {
     }
 
@@ -46,5 +48,13 @@ public class PostRequest {
 
     public void setSortField(String sortField) {
         this.sortField = sortField;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

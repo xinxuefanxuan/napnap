@@ -118,8 +118,8 @@ public class LoginActivity extends PublicActivity {
                     Log.d("ccc","登陆成功");
                     JSONObject data = loginReponse.getData();
                     try {
-                        User user = new User(data.getLong("id"),data.getString("userName"),data.getInt("fansNum")
-                        ,data.getInt("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
+                        User user = new User(data.getLong("id"),data.getString("userName"),data.getLong("fansNum")
+                        ,data.getLong("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
                         PublicApplication.setCurrentUser(user);
                         setResult(Activity.RESULT_OK,new Intent());
                         finish();

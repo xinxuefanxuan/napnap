@@ -15,8 +15,8 @@ import java.io.IOException;
 public class PersonalityViewModel extends ViewModel {
     private final MutableLiveData<String> username = new MutableLiveData<>();
     private final MutableLiveData<String> userAccount = new MutableLiveData<>();
-    private final MutableLiveData<Integer> followingCount = new MutableLiveData<>();
-    private final MutableLiveData<Integer> followersCount = new MutableLiveData<>();
+    private final MutableLiveData<Long> followingCount = new MutableLiveData<>();
+    private final MutableLiveData<Long> followersCount = new MutableLiveData<>();
 
     private final MutableLiveData<String> userAvatar = new MutableLiveData<>();
 
@@ -26,8 +26,8 @@ public class PersonalityViewModel extends ViewModel {
         this.personalityRepository = personalityRepository;
         username.postValue("请登录");
         userAccount.postValue("");
-        followingCount.postValue(-1);
-        followersCount.postValue(-1);
+        followingCount.postValue(new Long(-1));
+        followersCount.postValue(new Long(-1));
     }
 
 
@@ -48,11 +48,11 @@ public class PersonalityViewModel extends ViewModel {
         return userAccount;
     }
 
-    public LiveData<Integer> getFollowingCount() {
+    public LiveData<Long> getFollowingCount() {
         return followingCount;
     }
 
-    public LiveData<Integer> getFollowersCount() {
+    public LiveData<Long> getFollowersCount() {
         return followersCount;
     }
 
@@ -64,11 +64,11 @@ public class PersonalityViewModel extends ViewModel {
         userAccount.postValue(account);
     }
 
-    public void setFollowingCount(int count) {
+    public void setFollowingCount(Long count) {
         followingCount.postValue(count);
     }
 
-    public void setFollowersCount(int count) {
+    public void setFollowersCount(Long count) {
         followersCount.postValue(count);
     }
 

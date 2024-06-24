@@ -1,5 +1,6 @@
 package com.work37.napnap.Adaptor;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -58,6 +59,9 @@ public class UserAdaptor extends RecyclerView.Adapter<UserAdaptor.ViewHolder> {
             // Implement view functionality here, e.g., navigate to user profile
             Intent intent = new Intent(context, UserDetailActivity.class);
             intent.putExtra("User", user);
+            if (!(context instanceof Activity)) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
             context.startActivity(intent);
         });
     }

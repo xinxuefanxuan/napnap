@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.GameAdaptor;
 import com.work37.napnap.Game.GameRequest;
+import com.work37.napnap.global.PublicApplication;
 import com.work37.napnap.ui.search.GameResponse;
 import com.work37.napnap.R;
 import com.work37.napnap.entity.Game;
@@ -20,6 +21,7 @@ import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.UrlConstant;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -109,54 +111,55 @@ public class CollectedAppsActivity extends PublicActivity {
     }
 
     private void fetchCollectedGames() throws IOException, JSONException {
-        isLoading = true;
-
         new Thread(() -> {
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(new PersistentCookieJar(getApplicationContext()))
-                    .build();
-
-            GameRequest gameRequest = new GameRequest();
-            gameRequest.setCurrent(currentPage);
-            gameRequest.setPageSize(pageSize);
-            gameRequest.setSortField("");
-            Gson gson = new Gson();
-            String json = gson.toJson(gameRequest);
-
-
-            RequestBody requestBody = RequestBody.create(
-                    json,
-                    MediaType.get("application/json; charset=utf-8")
-            );
-            Request request = new Request.Builder()
-                    .url(UrlConstant.baseUrl + "api/game/listAllGameByUserCollect")
-                    .post(requestBody)
-                    .build();
-            Response response;
-            String responseBody;
             try {
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getApplicationContext()))
+                        .build();
+
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("userId", PublicApplication.getCurrentUser().getId());
+                jsonObject1.put("page", currentPage);
+                jsonObject1.put("pageSize", 10);
+                jsonObject1.put("sortField", "");
+                RequestBody requestBody = RequestBody.create(
+                        jsonObject1.toString(),
+                        MediaType.get("application/json; charset=utf-8")
+                );
+
+                Gson gson = new Gson();
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl + "api/game/listAllGameByUserCollect")
+                        .post(requestBody)
+                        .build();
+                Response response;
+                String responseBody;
+
                 response = okHttpClient.newCall(request).execute();
                 responseBody = response.body().string();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
-            GameResponse gameResponse = gson.fromJson(responseBody, GameResponse.class);
 
-            if (gameResponse.getCode() == 0) {
-                List<Game> records = gameResponse.getData().getRecords();
+                GameResponse gameResponse = gson.fromJson(responseBody, GameResponse.class);
 
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    collectedGameList.addAll(records);
-                    gameAdaptor.notifyDataSetChanged();
-                    isLoading = false;
-                    if (records.size() < pageSize) {
-                        isLastPage = true;
-                    } else {
+                if (gameResponse.getCode() == 0) {
+                    List<Game> records = gameResponse.getData().getRecords();
+
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        collectedGameList.addAll(records);
+                        gameAdaptor.notifyDataSetChanged();
                         isLoading = false;
-                    }
-                });
+                        if (records.size() < pageSize) {
+                            isLastPage = true;
+                        } else {
+                            isLoading = false;
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
+
+        isLoading = true;
     }
 }

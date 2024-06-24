@@ -1,5 +1,6 @@
 package com.work37.napnap.Adaptor;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 import okhttp3.MediaType;
@@ -63,16 +65,22 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.ViewHolder> {
         String formattedDate = sdf.format(post.getCreateTime());
         holder.postTimestamp.setText(formattedDate);
         holder.postTags.setText(formatTags(post.getTag()));
-
         Long userId = post.getUserId();
-        User cachedUser = userCache.get(userId);
-        if (cachedUser != null) {
-            bindUserToView(holder, cachedUser);
-        } else {
-            holder.postUsername.setText("Loading...");
-            holder.userAvatar.setImageResource(R.drawable.baseline_person_24);
-            loadUser(userId, holder);
+        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(()->loadUserAsync(userId,holder));
+        try {
+            voidCompletableFuture.get();
+            User cachedUser = userCache.get(userId);
+            if (cachedUser != null) {
+                bindUserToView(holder, cachedUser);
+            }else {
+                holder.postUsername.setText("Loading...");
+                holder.userAvatar.setImageResource(R.drawable.baseline_person_24);
+            }
+        }catch (Exception e){
+            throw  new RuntimeException(e);
         }
+
+
 
         if (post.getPictures() != null && !post.getPictures().isEmpty()) {
             holder.postImage.setVisibility(View.VISIBLE);
@@ -87,6 +95,9 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.ViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, PostDetailActivity.class);
             intent.putExtra("Post", post); // Pass post ID or any required data
+            if (!(context instanceof Activity)) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
             context.startActivity(intent);
         });
     }
@@ -103,8 +114,7 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.ViewHolder> {
         }
     }
 
-    private void loadUser(long userId, ViewHolder holder) {
-        new Thread(() -> {
+    private void loadUserAsync(long userId, ViewHolder holder) {
             try {
                 // Create JSON object
                 JSONObject jsonObject1 = new JSONObject();
@@ -130,17 +140,13 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.ViewHolder> {
                     JSONObject userData = jsonObject.getJSONObject("data");
                     String userAvatar = userData.getString("userAvatar");
                     String username = userData.getString("userName");
-                    User user = new User(userId, username, userAvatar);
+                    User user = new User( username, userAvatar,userId);
                     userCache.put(userId, user);
-
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        bindUserToView(holder, user);
-                    });
+                    ((Activity) context).runOnUiThread(() -> bindUserToView(holder, user));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start();
     }
 
     private String formatTags(List<String> tags) {

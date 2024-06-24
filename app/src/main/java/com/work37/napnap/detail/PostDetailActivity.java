@@ -1,17 +1,26 @@
 package com.work37.napnap.detail;
 
+import android.annotation.SuppressLint;
+import android.content.ClipDescription;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.BuildCompat;
+import androidx.core.view.inputmethod.EditorInfoCompat;
+import androidx.core.view.inputmethod.InputConnectionCompat;
+import androidx.core.view.inputmethod.InputContentInfoCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -85,9 +94,12 @@ public class PostDetailActivity extends PublicActivity {
     private boolean isLike;
     //是否收藏
     private boolean isCollect;
+    private ImageView myAvatar;
+    private EditText commentInput;
     //是否关注发贴用户
     private boolean isConcern;
 
+    @SuppressLint("AppCompatCustomView")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +118,7 @@ public class PostDetailActivity extends PublicActivity {
         int likes = post.getLikes();
         List<String> tag = post.getTag();
         List<String> picture = post.getPictures();
-        // Initialize views
+        // 初始化组件
         userAvatar = findViewById(R.id.userAvatar);
         username = findViewById(R.id.username);
         followButton = findViewById(R.id.followButton);
@@ -118,7 +130,59 @@ public class PostDetailActivity extends PublicActivity {
         likeCount = findViewById(R.id.likeCount);
         collectButton = findViewById(R.id.bookmarkButton);
         collectCount = findViewById(R.id.bookmarkCount);
+        myAvatar = findViewById(R.id.myAvatar);
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
+        commentInput = findViewById(R.id.commentInput);
+
+        //这个代码很关键，但是我也不知道他是干什么的
+        commentInput = new EditText(this) {
+            @Override
+            public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
+                final InputConnection ic = super.onCreateInputConnection(editorInfo);
+                EditorInfoCompat.setContentMimeTypes(editorInfo,
+                        new String [] {"image/png"});
+
+                final InputConnectionCompat.OnCommitContentListener callback =
+                        new InputConnectionCompat.OnCommitContentListener() {
+                            @Override
+                            public boolean onCommitContent(InputContentInfoCompat inputContentInfo,
+                                                           int flags, Bundle opts) {
+                                // read and display inputContentInfo asynchronously
+                                if (BuildCompat.isAtLeastNMR1() && (flags &
+                                        InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
+                                    try {
+                                        inputContentInfo.requestPermission();
+                                    }
+                                    catch (Exception e) {
+                                        return false; // return false if failed
+                                    }
+                                }
+
+                                // read and display inputContentInfo asynchronously.
+                                // call inputContentInfo.releasePermission() as needed.
+
+                                return true;  // return true if succeeded
+                            }
+                        };
+                return InputConnectionCompat.createWrapper(ic, editorInfo, callback);
+            }
+            public void onStartInputView(EditorInfo info, boolean restarting) {
+                String[] mimeTypes = EditorInfoCompat.getContentMimeTypes(info);
+
+                boolean gifSupported = false;
+                for (String mimeType : mimeTypes) {
+                    if (ClipDescription.compareMimeTypes(mimeType, "image/gif")) {
+                        gifSupported = true;
+                    }
+                }
+
+                if (gifSupported) {
+                    // the target editor supports GIFs. enable corresponding content
+                } else {
+                    // the target editor does not support GIFs. disable corresponding content
+                }
+            }
+        };
 
         // Initialize RecyclerView
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -167,6 +231,8 @@ public class PostDetailActivity extends PublicActivity {
                 if (user.getUserAvatar() != null) {
                     Glide.with(this).load(user.getUserAvatar())
                             .into(userAvatar);
+                    Glide.with(this).load(user.getUserAvatar())
+                            .into(myAvatar);
                 }else{
                     userAvatar.setVisibility(View.GONE);
                 }
@@ -381,6 +447,7 @@ public class PostDetailActivity extends PublicActivity {
             collectButton.setImageResource(R.drawable.uncollect);
         }
     }
+
 
     /**
      * 初始化时加载用户是否点赞了该帖子
