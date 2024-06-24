@@ -33,9 +33,9 @@ import okhttp3.Response;
 
 public class GameDetailActivity extends PublicActivity {
     private boolean collected = false;
-    private Button likeButton;
     private TextView gameScore;
     private TextView gameFavorites;
+    private Button likeButton;
 
     @SuppressLint("SetTextI18n")
     @Override

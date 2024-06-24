@@ -86,9 +86,6 @@ public class FragmentFindGame extends Fragment {
             selectedTags.add(tag);
         }
         updateGameList();
-        if (selectedTags.isEmpty()) {
-        } else {
-        }
         updateButtonStates();
     }
 
