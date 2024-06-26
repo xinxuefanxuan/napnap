@@ -1,11 +1,25 @@
 package com.work37.napnap.entity;
 
+import com.work37.napnap.ui.userlogin_register.User;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class CommentAndUser extends Comment implements Serializable {
     private String userName;
     private String userAvatar;
+    private User parentUser;
+
+    public User getParentUser() {
+        return parentUser;
+    }
+
+    public void setParentUser(User parentUser) {
+        this.parentUser = parentUser;
+    }
+
+
+
 
     private List<CommentAndUser> commentAndUserList;
 

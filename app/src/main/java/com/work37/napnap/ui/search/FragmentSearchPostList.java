@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.PostAdaptor;
 import com.work37.napnap.R;
+import com.work37.napnap.RequestAndResponse.PostResponse;
+import com.work37.napnap.RequestAndResponse.SearchRequest;
 import com.work37.napnap.entity.Post;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;
@@ -40,6 +42,7 @@ public class FragmentSearchPostList extends Fragment {
         private int pageSize = 10;
         private boolean isLastPage = false;
         private boolean isFirstLoad = true;
+        private boolean hasMoreData;
 
     @Nullable
     @Override
@@ -56,6 +59,8 @@ public class FragmentSearchPostList extends Fragment {
         recyclerView.setAdapter(postAdaptor);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        hasMoreData = true;
+
         // 添加分割线
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -65,7 +70,7 @@ public class FragmentSearchPostList extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == postList.size() - 1 && !isLoading && !isLastPage) {
+                if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == postList.size() - 1 && !isLoading && !isLastPage&&hasMoreData) {
                     currentPage++;
                     fetchPostData("");
                 }
@@ -90,6 +95,7 @@ public class FragmentSearchPostList extends Fragment {
             currentPage = 1;
             isLastPage = false;
             postList.clear();
+            hasMoreData = true;
             postAdaptor.notifyDataSetChanged();
             fetchPostData("");
         }
@@ -132,6 +138,9 @@ public class FragmentSearchPostList extends Fragment {
                     throw new RuntimeException(e);
                 }
                 List<Post> records = gson.fromJson(responseBody, PostResponse.class).getData().getRecords();
+                if(records.size()<10){
+                    hasMoreData = false;
+                }
                 new Handler(Looper.getMainLooper()).post(() -> {
                     postList.addAll(records);
                     postAdaptor.notifyDataSetChanged();

@@ -1,10 +1,10 @@
-package com.work37.napnap.Game;
+package com.work37.napnap.RequestAndResponse;
 
 import com.work37.napnap.entity.CommentUnderPostVO;
 
 import java.util.List;
 
-public class PostResponse {
+public class CommentResponse {
     private int code;
     private CommentData data;
     private String message;

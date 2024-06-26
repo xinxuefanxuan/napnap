@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.UserAdaptor;
 import com.work37.napnap.R;
+import com.work37.napnap.RequestAndResponse.SearchRequest;
+import com.work37.napnap.RequestAndResponse.UserResponse;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;
 import com.work37.napnap.ui.userlogin_register.User;
@@ -134,7 +136,7 @@ public class FragmentSearchUserList extends Fragment {
                 throw new RuntimeException(e);
             }
 
-            List<User> records = gson.fromJson(responseBody,UserResponse.class).getData().getRecords();
+            List<User> records = gson.fromJson(responseBody, UserResponse.class).getData().getRecords();
 
             new Handler(Looper.getMainLooper()).post(() -> {
                 userList.addAll(records);

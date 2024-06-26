@@ -1,10 +1,9 @@
-package com.work37.napnap;
+package com.work37.napnap.ui.frontPage;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.GameAdaptor;
-import com.work37.napnap.Game.GameRequest;
-import com.work37.napnap.ui.search.GameResponse;
+import com.work37.napnap.R;
+import com.work37.napnap.RequestAndResponse.GameRequest;
+import com.work37.napnap.RequestAndResponse.GameResponse;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;

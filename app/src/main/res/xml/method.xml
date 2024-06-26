@@ -1,0 +1,4 @@
+<InputMethodService xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="com.example.MyInputMethodSettings"
+    android:icon="@drawable/baseline_camera_alt_24"
+     />

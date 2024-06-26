@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.GameAdaptor;
-import com.work37.napnap.Game.GameRequest;
+import com.work37.napnap.RequestAndResponse.GameRequest;
 import com.work37.napnap.databinding.FragmentTagfilteredGamelistBinding;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.UrlConstant;
-import com.work37.napnap.ui.search.GameResponse;
+import com.work37.napnap.RequestAndResponse.GameResponse;
 
 import java.util.ArrayList;
 import java.util.List;
