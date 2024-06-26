@@ -1,11 +1,11 @@
-package com.work37.napnap.ui.search;
+package com.work37.napnap.RequestAndResponse;
 
 import com.work37.napnap.entity.Game;
-import com.work37.napnap.entity.Post;
+import com.work37.napnap.ui.userlogin_register.User;
 
 import java.util.List;
 
-public class PostResponse {
+public class UserResponse {
     private int code;
     private Data data;
     private String message;
@@ -38,16 +38,16 @@ public class PostResponse {
     }
 
     public static class Data {
-        private List<Post> records;
+        private List<User> records;
         private int total;
 
         // getters and setters
 
-        public List<Post> getRecords() {
+        public List<User> getRecords() {
             return records;
         }
 
-        public void setRecords(List<Post> records) {
+        public void setRecords(List<User> records) {
             this.records = records;
         }
 

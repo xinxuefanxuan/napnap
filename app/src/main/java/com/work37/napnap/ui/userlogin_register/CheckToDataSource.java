@@ -115,6 +115,7 @@ public class CheckToDataSource {
                     try {
                         user = new User(data.getLong("id"),data.getString("userName"),data.getLong("fansNum")
                                 ,data.getLong("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
+                        user.setUserAccount(data.getString("userAccount"));
                         PublicApplication.setCurrentUser(user);
                         mutableLiveData.postValue(new LoginReponse(data));
                     } catch (JSONException e) {

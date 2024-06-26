@@ -26,6 +26,8 @@ public class Comment implements Serializable {
         this.createTime = createTime;
     }
 
+
+
     public Long getPostId() {
         return id;
     }

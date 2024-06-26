@@ -27,6 +27,14 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ReplyTo"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/replyContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -102,51 +102,74 @@
             android:layout_marginEnd="16dp"/>
     </LinearLayout>
 
-    <!-- 四个按钮 -->
-    <LinearLayout
+    <!-- 使用 GridLayout 来排列按钮 -->
+    <GridLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:columnCount="2"
         app:layout_constraintTop_toBottomOf="@id/stats_group"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
 
         <Button
             android:id="@+id/btn_post"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="发布帖子"/>
+            android:layout_columnWeight="1"
+            android:drawableStart="@drawable/mypost"
+            android:text="发布帖子"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"/>
 
         <Button
             android:id="@+id/btn_collection_post"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:drawableStart="@drawable/collectpost"
             android:text="收藏帖子"
-            android:layout_marginTop="8dp"/>
+            android:backgroundTint="@android:color/holo_green_light"
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"/>
 
         <Button
             android:id="@+id/btn_collection_app"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:drawableStart="@drawable/collectapp"
             android:text="收藏App"
-            android:layout_marginTop="8dp"/>
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"/>
 
         <Button
             android:id="@+id/btn_password_change"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:drawableStart="@drawable/changepassword"
             android:text="修改密码"
-            android:layout_marginTop="8dp"/>
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"/>
 
         <Button
             android:id="@+id/btn_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:drawableStart="@drawable/logout"
             android:text="退出登录"
-            android:layout_marginTop="8dp"/>
-    </LinearLayout>
+            android:backgroundTint="@android:color/holo_purple"
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"/>
+    </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 
