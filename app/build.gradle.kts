@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -56,6 +57,9 @@ dependencies {
     implementation("cn.hutool:hutool-all:5.8.28")
     implementation ("androidx.core:core:1.10.1")
     implementation ("androidx.emoji2:emoji2:1.3.0")  // 可选，支持 emoji
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation("com.google.firebase:firebase-analytics")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
