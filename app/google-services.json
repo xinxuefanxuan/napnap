@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1069724532216",
+    "project_id": "napnap-test",
+    "storage_bucket": "napnap-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1069724532216:android:bffaaad43a8027deceea0d",
+        "android_client_info": {
+          "package_name": "com.work37.napnap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgKY_5r02zjIVEaff4b3LSL8WfSSW_jwE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
