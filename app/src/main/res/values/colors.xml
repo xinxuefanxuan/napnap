@@ -25,6 +25,9 @@
     <color name="category_button_unselectedTextColor">@color/black</color>
     <color name="category_button_selectedBorderColor">@color/black</color>
     <color name="category_button_unselectedBorderColor">@color/black</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="detailbackground">#b7e5fd</color>
+
 
 
     <color name="colorPrimaryDark">#3700B3</color>

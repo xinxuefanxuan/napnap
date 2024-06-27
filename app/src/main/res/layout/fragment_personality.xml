@@ -9,7 +9,7 @@
     tools:context=".ui.personality.PersonalityFragment">
 
     <!-- 用户头像 -->
-    <ImageView
+    <com.work37.napnap.global.RoundedImageView
         android:id="@+id/user_avatar"
         android:layout_width="80dp"
         android:layout_height="80dp"

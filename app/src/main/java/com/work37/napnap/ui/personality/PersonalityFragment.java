@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.work37.napnap.R;
 import com.work37.napnap.databinding.FragmentPersonalityBinding;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicApplication;
@@ -83,11 +84,12 @@ public class PersonalityFragment extends Fragment {
             binding.followersCount.setText("粉丝:"+user.getFanNum());
             binding.followingCount.setText("关注:"+user.getFollowNum());
 
+            if(user.getUserAvatar().equals("")){
+                user.setUserAvatar("https://gitee.com/Code_for_love/napnapimages/raw/master/-7277026446464267753头像.png");
+            }
             // 确保在 UI 线程中进行 Glide 加载操作
             new Handler(Looper.getMainLooper()).post(() -> {
-                Glide.with(binding.userAvatar.getContext())
-                            .load(user.getUserAvatar())
-                            .into(binding.userAvatar);
+                binding.userAvatar.setRoundedImage(user.getUserAvatar(),40,1, R.color.red);
             });
             binding.btnCollectionApp.setEnabled(true);
             binding.btnCollectionPost.setEnabled(true);

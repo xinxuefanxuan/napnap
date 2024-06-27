@@ -1,20 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.personality.FansActivity"
+    >
 
-    <ImageButton
-        android:id="@+id/backButton"
+    <!-- Back Button -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        android:src="@drawable/baseline_arrow_back_ios_24" />
+        android:alpha="0.8"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/backbutton"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/fan"
+        android:src="@drawable/fan"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:padding="16dp" />
 
 </LinearLayout>
+

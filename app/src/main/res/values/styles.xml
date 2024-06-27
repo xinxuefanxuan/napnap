@@ -28,4 +28,10 @@
         <item name="android:layout_margin">1dp</item>
         <item name="android:layout_gravity">center</item> <!-- 布局重心 -->
     </style>
+
+    <style name="RoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40dp</item> <!-- 设置圆角半径 -->
+    </style>
+
 </resources>
