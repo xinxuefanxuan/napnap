@@ -28,4 +28,23 @@
         <item name="android:layout_margin">1dp</item>
         <item name="android:layout_gravity">center</item> <!-- 布局重心 -->
     </style>
+
+    <style name="RoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40dp</item> <!-- 设置圆角半径 -->
+    </style>
+
+
+
+    <style name="CustomButton">
+            <item name="android:layout_width">wrap_content</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:padding">8dp</item>
+            <item name="android:background">@drawable/button_background</item>
+            <item name="android:elevation">4dp</item>
+            <item name="android:layout_margin">8dp</item>
+    </style>
+
+
+
 </resources>

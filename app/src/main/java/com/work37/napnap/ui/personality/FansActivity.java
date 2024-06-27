@@ -3,7 +3,10 @@ package com.work37.napnap.ui.personality;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.UserAdaptor;
 import com.work37.napnap.R;
+import com.work37.napnap.databinding.ActivityFansBinding;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.UrlConstant;
@@ -32,9 +36,12 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class FansActivity extends PublicActivity {
+    private ActivityFansBinding activityFansBinding;
     private RecyclerView recyclerView;
     private UserAdaptor userAdaptor;
+    private ImageButton backButton;
     private List<User> collectedUserList;
+    private ImageView emptyView;
     private boolean isLoading = false;
     private int currentPage = 1;
     private int pageSize = 10;
@@ -44,10 +51,13 @@ public class FansActivity extends PublicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collected_posts);
+        setContentView(R.layout.activity_fans);
 
-        recyclerView = findViewById(R.id.recycler_view);
-        ImageButton backButton = findViewById(R.id.backButton);
+        activityFansBinding = ActivityFansBinding.inflate(getLayoutInflater());
+
+        emptyView = activityFansBinding.emptyView;
+        recyclerView = activityFansBinding.recyclerView;
+        backButton = activityFansBinding.backButton;
 
         // Set up back button
         backButton.setOnClickListener(v -> finish());
@@ -153,6 +163,16 @@ public class FansActivity extends PublicActivity {
                         } else {
                             isLoading = false;
                         }
+
+                        // 控制空视图的可见性
+                        if (collectedUserList==null|| collectedUserList.isEmpty()) {
+                            recyclerView.setVisibility(View.GONE);
+                            emptyView.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            emptyView.setVisibility(View.GONE);
+                        }
+
                     });
                 }
             }catch (Exception e){

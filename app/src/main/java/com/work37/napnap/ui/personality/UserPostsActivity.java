@@ -3,13 +3,17 @@ package com.work37.napnap.ui.personality;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.work37.napnap.Adaptor.MyPostAdaptor;
 import com.work37.napnap.Adaptor.PostAdaptor;
 import com.work37.napnap.RequestAndResponse.PostRequest;
 import com.work37.napnap.R;
@@ -34,7 +38,7 @@ import okhttp3.Response;
 
 public class UserPostsActivity extends PublicActivity {
     private RecyclerView recyclerView;
-    private PostAdaptor postAdaptor;
+    private MyPostAdaptor postAdaptor;
     private List<Post> collectedPostList;
     private boolean isLoading = false;
     private int currentPage = 1;
@@ -45,7 +49,7 @@ public class UserPostsActivity extends PublicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collected_posts);
+        setContentView(R.layout.activity_user_posts);
 
         recyclerView = findViewById(R.id.recycler_view);
         ImageButton backButton = findViewById(R.id.backButton);
@@ -55,10 +59,33 @@ public class UserPostsActivity extends PublicActivity {
 
         // Initialize game list and adapter
         collectedPostList = new ArrayList<>();
-        postAdaptor = new PostAdaptor(this, collectedPostList);
+        postAdaptor = new MyPostAdaptor(this, collectedPostList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(postAdaptor);
+        // 添加分割线
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    int position = viewHolder.getAdapterPosition();
+                    MyPostAdaptor.ViewHolder holder = (MyPostAdaptor.ViewHolder) viewHolder;
+                    holder.deleteButton.setVisibility(View.VISIBLE);
+                    holder.cancelButton.setVisibility(View.VISIBLE);
+                    holder.contentLayout.setVisibility(View.GONE);
+                }
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         // Add scroll listener to RecyclerView for pagination
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.work37.napnap.RequestAndResponse.CommentRequest;
 import com.work37.napnap.RequestAndResponse.PostRequest;
 import com.work37.napnap.RequestAndResponse.CommentResponse;
 import com.work37.napnap.R;
+import com.work37.napnap.databinding.ActivityPostDetailBinding;
 import com.work37.napnap.entity.Comment;
 import com.work37.napnap.entity.CommentAndUser;
 import com.work37.napnap.entity.CommentUnderPostVO;
@@ -63,6 +65,7 @@ import okhttp3.Response;
 
 public class PostDetailActivity extends PublicActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
+    private ActivityPostDetailBinding binding;
     private ImageView userAvatar;
     private TextView username;
 //    private Button followButton;
@@ -78,6 +81,7 @@ public class PostDetailActivity extends PublicActivity {
     private RecyclerView commentsRecyclerView;
     private CommentAdapter commentAdapter;
 
+    private ProgressBar progressBar;
     private Map<Long, User> userCache = new HashMap<>();
 
     private List<CommentAndUser> list;
@@ -98,15 +102,20 @@ public class PostDetailActivity extends PublicActivity {
     private ImageButton galleryButton;
 
     private String comment;
+    private Handler handler = new Handler();
+    private Runnable runnable;
+    private int picturePage = 0;
+    private static final int DELAY_MS = 1000; // 任务开始之前的延迟
+    private static final int PERIOD_MS = 1000; // 两个任务之间的延迟
     //是否关注发贴用户
 //    private boolean isConcern;
 
     @SuppressLint({"AppCompatCustomView", "MissingInflatedId", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        binding = ActivityPostDetailBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
-
         list = new ArrayList<>();
         //获取post对象
         Post post = (Post) getIntent().getSerializableExtra("Post");
@@ -136,7 +145,10 @@ public class PostDetailActivity extends PublicActivity {
         myAvatar = findViewById(R.id.myAvatar);
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
         commentInput = findViewById(R.id.commentInput);
+        progressBar = binding.progressBar;
 //        galleryButton = findViewById(R.id.galleryButton);
+
+        PostDetailActivity.this.runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
 
         commentInput.setOnTouchListener((v, event) -> {
             commentInput.requestFocus();
@@ -169,45 +181,47 @@ public class PostDetailActivity extends PublicActivity {
         commentAdapter = new CommentAdapter(list, PostDetailActivity.this);
         commentsRecyclerView.setAdapter(commentAdapter);
 
-        //将一些开始就可以初始化的初始化
-        postTitle.setText(title);
-        postContent.setText(content);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
-        String formattedDate = sdf.format(createTime);
-        postTimestamp.setText(formattedDate);
+            //将一些开始就可以初始化的初始化
+            postTitle.setText(title);
+            postContent.setText(content);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+            String formattedDate = sdf.format(createTime);
+            postTimestamp.setText(formattedDate);
 
-        likeCount.setText(String.valueOf(likes));
+            likeCount.setText(String.valueOf(likes));
 
-        collectCount.setText(String.valueOf(collectNum));
+            collectCount.setText(String.valueOf(collectNum));
 
-        List<String> imageUrls = post.getPictures();
-        if(imageUrls==null){
-            viewPager.setVisibility(View.GONE);
-            tabLayout.setVisibility(View.GONE);
-        }else{
-            ImagePagerAdapter adapter = new ImagePagerAdapter(this, imageUrls);
-            viewPager.setAdapter(adapter);
-            tabLayout.setupWithViewPager(viewPager, true);
-        }
+            List<String> imageUrls = post.getPictures();
+            if(imageUrls==null){
+                viewPager.setVisibility(View.GONE);
+                tabLayout.setVisibility(View.GONE);
+            }else{
+                ImagePagerAdapter adapter = new ImagePagerAdapter(this, imageUrls);
+                viewPager.setAdapter(adapter);
+                tabLayout.setupWithViewPager(viewPager, true);
+
+                setupAutoSlide(imageUrls.size());
+            }
 
 
-        //对点赞按钮和收藏按钮进行初始化，判断是否之前就已经点赞过或者收藏过
-        //对关注按钮也是，首先要获取该用户之前是否已经关注过他
-        CompletableFuture<Void> voidCompletableFuture1 = CompletableFuture.runAsync(()->loadLikeAsync(postId));
-        try {
-            voidCompletableFuture1.get();
+            //对点赞按钮和收藏按钮进行初始化，判断是否之前就已经点赞过或者收藏过
+            //对关注按钮也是，首先要获取该用户之前是否已经关注过他
+            CompletableFuture<Void> voidCompletableFuture1 = CompletableFuture.runAsync(()->loadLikeAsync(postId));
+            try {
+                voidCompletableFuture1.get();
 //            updateLikeButton();
-        }catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            }catch (Exception e) {
+                throw new RuntimeException(e);
+            }
 
-        CompletableFuture<Void> voidCompletableFuture2 = CompletableFuture.runAsync(()->loadCollectAsync(postId));
-        try {
-            voidCompletableFuture2.get();
+            CompletableFuture<Void> voidCompletableFuture2 = CompletableFuture.runAsync(()->loadCollectAsync(postId));
+            try {
+                voidCompletableFuture2.get();
 //            updatecollectButton();
-        }catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            }catch (Exception e) {
+                throw new RuntimeException(e);
+            }
 
         //获取帖子下面的评论
         loadComments(postId);
@@ -228,6 +242,7 @@ public class PostDetailActivity extends PublicActivity {
                 }
                 username.setText(user.getUserName());
             }
+            progressBar.setVisibility(View.GONE);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -261,6 +276,31 @@ public class PostDetailActivity extends PublicActivity {
 
         // Handle post comment button click
         findViewById(R.id.postCommentButton).setOnClickListener(v -> postComment(comment,postId));
+    }
+
+    private void setupAutoSlide(int count) {
+        runnable = new Runnable() {
+            public void run() {
+                if (picturePage == count) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(picturePage++, true);
+                handler.postDelayed(this, PERIOD_MS);
+            }
+        };
+        handler.postDelayed(runnable, DELAY_MS);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable); // Stop the handler when activity is not in foreground
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.postDelayed(runnable, DELAY_MS); // Restart the handler when activity comes to foreground
     }
 
     private void openGallery() {
@@ -365,6 +405,7 @@ public class PostDetailActivity extends PublicActivity {
 //        }
 //        return commentList;
 //    }
+
     private List<CommentAndUser> getCommentList(List<CommentUnderPostVO> records) {
         List<CommentAndUser> commentList = new ArrayList<>();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
@@ -374,6 +415,7 @@ public class PostDetailActivity extends PublicActivity {
             if(commentAndUser.getCommentType()==0){
                 commentAndUser.setParentUser(null);
             }
+            //获取用户名和对象
             futures.add(loadUserAsync(commentAndUser));
 
             List<CommentUnderPostVO> convertList = new ArrayList<>();

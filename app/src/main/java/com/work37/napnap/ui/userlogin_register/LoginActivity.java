@@ -120,6 +120,9 @@ public class LoginActivity extends PublicActivity {
                         User user = new User(data.getLong("id"),data.getString("userName"),data.getLong("fansNum")
                         ,data.getLong("focusNum"),data.getString("userProfile"),data.getString("userAvatar"));
                         user.setUserAccount(data.getString("userAccount"));
+                        if(user.getUserAvatar().equals("")){
+                            user.setUserAvatar("https://gitee.com/Code_for_love/napnapimages/raw/master/-7277026446464267753头像.png");
+                        }
                         PublicApplication.setCurrentUser(user);
                         setResult(Activity.RESULT_OK,new Intent());
                         finish();

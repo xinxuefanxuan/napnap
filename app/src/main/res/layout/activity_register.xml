@@ -5,34 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.userlogin_register.RegisterActivity"
+    android:background="@drawable/my_napnap"
     >
 
     <!-- Back Button -->
-    <ImageButton
-        android:id="@+id/backButton"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/baseline_arrow_back_ios_24"
-    />
+        android:layout_margin="32dp"
+        android:alpha="0.8"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/backbutton"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </androidx.cardview.widget.CardView>
 
     <!-- App Logo -->
-    <ImageView
-        android:id="@+id/appLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/backButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/napnap"
-    />
+<!--    <ImageView-->
+<!--        android:id="@+id/appLogo"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/backButton"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:src="@drawable/napnap"-->
+<!--    />-->
 
     <!-- Username Label -->
     <TextView
         android:id="@+id/usernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appLogo"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/cardview"
+        android:layout_marginTop="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:textColor="#333333"
         android:text="@string/username"
         android:textSize="16sp" />
 
@@ -43,6 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameLabel"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:hint="@string/enter_username"
         android:inputType="text" />
 
@@ -52,7 +70,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameInput"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:textColor="#333333"
         android:text="@string/password"
         android:textSize="16sp" />
 
@@ -63,6 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordLabel"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:hint="@string/enter_password"
         android:inputType="textPassword" />
 
@@ -72,7 +96,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordInput"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:textColor="#333333"
         android:text="@string/confirm_password"
         android:textSize="16sp" />
 
@@ -83,14 +111,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/confirmPasswordLabel"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:hint="@string/enter_secondpassword"
         android:inputType="textPassword" />
 
     <!-- Register Button -->
     <Button
         android:id="@+id/registerButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/confirmPasswordInput"
         android:layout_marginTop="16dp"
         android:text="@string/register"
@@ -103,7 +134,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/registerButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/white"
         android:text="@string/agree_terms" />
 
     <ProgressBar
@@ -112,7 +144,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="64dp"
-        android:layout_marginBottom="64dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/termsCheckbox"

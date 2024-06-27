@@ -62,6 +62,9 @@ dependencies {
     implementation ("androidx.emoji2:emoji2:1.3.0")  // 可选，支持 emoji
     implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
     implementation("com.google.firebase:firebase-analytics")
+//    implementation("com.android.support:appcompat-v7:30.0.0")
+    implementation("com.google.firebase:firebase-messaging:latest_version")
+    implementation ("com.squareup.okhttp3:okhttp-sse:4.9.3")
 
 
     testImplementation(libs.junit)
