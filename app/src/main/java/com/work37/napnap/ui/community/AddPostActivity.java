@@ -370,7 +370,6 @@ public class AddPostActivity extends PublicActivity {
                 e.printStackTrace();
                 Toast.makeText(this, "提交失败", Toast.LENGTH_SHORT).show();
             }
-
         }).start();
     }
 }
