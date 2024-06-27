@@ -57,7 +57,6 @@ public class SearchActivity extends PublicActivity {
                         return null;
                 }
             }
-
             @Override
             public int getItemCount() {
                 return searchTabs.length;
