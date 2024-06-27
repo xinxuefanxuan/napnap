@@ -211,10 +211,8 @@ public class UserDetailActivity extends PublicActivity {
                 int code = jsonObject.getInt("code");
                 boolean data = jsonObject.getBoolean("data");
                 if (code == 0) {
-                    runOnUiThread(() -> {
-                        isFollowing = data;
-                        updateFollowButton();
-                    });
+                    isFollowing = data;
+                    updateFollowButton();
                 } else {
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();

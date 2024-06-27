@@ -73,12 +73,8 @@ public class MainActivity extends PublicActivity {
         sendToken = false;
         getLoginUser();
 
-
-
-
         // 获取并显示 FCM 令牌
         getAndDisplayFcmToken();
-
     }
 
 
@@ -204,8 +200,8 @@ public class MainActivity extends PublicActivity {
             }
         });
     }
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

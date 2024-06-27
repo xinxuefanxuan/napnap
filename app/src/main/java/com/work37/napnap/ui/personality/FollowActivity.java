@@ -3,7 +3,9 @@ package com.work37.napnap.ui.personality;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.work37.napnap.Adaptor.UserAdaptor;
 import com.work37.napnap.R;
+import com.work37.napnap.databinding.ActivityFollowBinding;
 import com.work37.napnap.global.PersistentCookieJar;
 import com.work37.napnap.global.PublicActivity;
 import com.work37.napnap.global.UrlConstant;
@@ -33,7 +36,11 @@ import okhttp3.Response;
 
 public class FollowActivity extends PublicActivity {
     private RecyclerView recyclerView;
+    private ImageButton backButton;
+    private ImageView emptyView;
+
     private UserAdaptor userAdaptor;
+    private ActivityFollowBinding binding;
     private List<User> collectedUserList;
     private boolean isLoading = false;
     private int currentPage = 1;
@@ -44,10 +51,13 @@ public class FollowActivity extends PublicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collected_posts);
+        setContentView(R.layout.activity_follow);
 
-        recyclerView = findViewById(R.id.recycler_view);
-        ImageButton backButton = findViewById(R.id.backButton);
+        binding = ActivityFollowBinding.inflate(getLayoutInflater());
+
+        recyclerView = binding.recyclerView;
+        backButton = binding.backButton;
+        emptyView = binding.emptyView;
 
         // Set up back button
         backButton.setOnClickListener(v -> finish());
@@ -75,8 +85,6 @@ public class FollowActivity extends PublicActivity {
                 }
             }
         });
-
-        // Fetch initial data
         try {
             fetchCollectedPosts();
         } catch (IOException | JSONException e) {
@@ -108,7 +116,6 @@ public class FollowActivity extends PublicActivity {
 
     private void fetchCollectedPosts() throws IOException, JSONException {
         isLoading = true;
-
         new Thread(() -> {
             try {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -143,7 +150,6 @@ public class FollowActivity extends PublicActivity {
 
                 if (userResponse.getCode() == 0) {
                     List<User> records = userResponse.getData().getRecords();
-
                     new Handler(Looper.getMainLooper()).post(() -> {
                         collectedUserList.addAll(records);
                         userAdaptor.notifyDataSetChanged();

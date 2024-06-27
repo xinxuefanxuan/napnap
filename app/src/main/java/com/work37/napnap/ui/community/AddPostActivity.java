@@ -186,14 +186,33 @@ public class AddPostActivity extends PublicActivity {
     }
 
     private void addImageToLayout(String imageUrl) {
+//        ImageView imageView = new ImageView(this);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+//        layoutParams.setMargins(8, 0, 8, 0);
+//        imageView.setLayoutParams(layoutParams);
+//        // 使用 Glide 或 Picasso 加载图片
+//        Glide.with(this)
+//                .load(imageUrl)
+//                .into(imageView);
+//        selectImageLayout.addView(imageView);
         ImageView imageView = new ImageView(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
-        layoutParams.setMargins(8, 0, 8, 0);
+        int sizeInDp = 100; // Image size in dp
+        int marginInDp = 8; // Margin size in dp
+
+        // Convert dp to pixels
+        float density = getResources().getDisplayMetrics().density;
+        int sizeInPx = (int) (sizeInDp * density);
+        int marginInPx = (int) (marginInDp * density);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(sizeInPx, sizeInPx);
+        layoutParams.setMargins(marginInPx, 0, marginInPx, 0);
         imageView.setLayoutParams(layoutParams);
+
         // 使用 Glide 或 Picasso 加载图片
         Glide.with(this)
                 .load(imageUrl)
                 .into(imageView);
+
         selectImageLayout.addView(imageView);
     }
 
@@ -350,7 +369,6 @@ public class AddPostActivity extends PublicActivity {
                 e.printStackTrace();
                 Toast.makeText(this, "提交失败", Toast.LENGTH_SHORT).show();
             }
-
         }).start();
     }
 }
