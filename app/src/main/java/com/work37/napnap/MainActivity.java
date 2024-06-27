@@ -40,11 +40,15 @@ public class MainActivity extends PublicActivity {
     //用于从后端获取数据
     private LoginViewModel loginViewModel;
 
+    private SseClient sseClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        sseClient = new SseClient(getApplicationContext());
+        sseClient.start();
         initBottomNavigation();
         loginViewModel = new ViewModelProvider(this,new LoginViewModelFactory(getApplicationContext()))
                 .get(LoginViewModel.class);
@@ -97,8 +101,8 @@ public class MainActivity extends PublicActivity {
             }
         });
     }
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

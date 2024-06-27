@@ -405,6 +405,7 @@ public class PostDetailActivity extends PublicActivity {
 //        }
 //        return commentList;
 //    }
+
     private List<CommentAndUser> getCommentList(List<CommentUnderPostVO> records) {
         List<CommentAndUser> commentList = new ArrayList<>();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
@@ -414,6 +415,7 @@ public class PostDetailActivity extends PublicActivity {
             if(commentAndUser.getCommentType()==0){
                 commentAndUser.setParentUser(null);
             }
+            //获取用户名和对象
             futures.add(loadUserAsync(commentAndUser));
 
             List<CommentUnderPostVO> convertList = new ArrayList<>();

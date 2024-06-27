@@ -43,10 +43,16 @@ public class UserAdaptor extends RecyclerView.Adapter<UserAdaptor.ViewHolder> {
 
         Log.d("abcd",user.toString());
 
+        Log.d("abcdefg",user.getUserAvatar());
+        if(user.getUserAvatar().equals("null")||user.getUserAvatar()==null){
+            Glide.with(context)
+                    .load(user.getUserAvatar())
+                    .into(holder.userAvatar);
+        }
+
         Glide.with(context)
                     .load(user.getUserAvatar())
                     .into(holder.userAvatar);
-
 
 
         // Set user name, followers, and following

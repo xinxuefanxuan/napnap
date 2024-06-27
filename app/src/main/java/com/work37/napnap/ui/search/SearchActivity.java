@@ -74,28 +74,6 @@ public class SearchActivity extends PublicActivity {
             performSearchInFragment(currentTabPosition, query);
         });
 
-//        searchTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                String query = searchInput.getText().toString().trim();
-//
-//                int position = tab.getPosition();
-//                performSearchInFragment(position, query);
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//                // Do nothing
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-////                String query = searchInput.getText().toString().trim();
-////                int position = tab.getPosition();
-////                performSearchInFragment(position, query);
-//            }
-//        });
-
     }
 
     private void performSearchInFragment(int tabPosition, String query) {

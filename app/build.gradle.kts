@@ -64,6 +64,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 //    implementation("com.android.support:appcompat-v7:30.0.0")
     implementation("com.google.firebase:firebase-messaging:latest_version")
+    implementation ("com.squareup.okhttp3:okhttp-sse:4.9.3")
 
 
     testImplementation(libs.junit)
