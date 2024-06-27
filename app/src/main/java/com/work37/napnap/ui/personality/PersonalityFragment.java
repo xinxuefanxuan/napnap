@@ -111,6 +111,12 @@ public class PersonalityFragment extends Fragment {
         binding.followingCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                User user = PublicApplication.getCurrentUser();
+                if (user.getFollowNum()==0){
+                    Toast.makeText(getActivity(),"没有关注", Toast.LENGTH_LONG).show();
+                }
+
                 Intent intent = new Intent(getContext(), FollowActivity.class);
                 startActivity(intent);
             }
@@ -119,8 +125,15 @@ public class PersonalityFragment extends Fragment {
         binding.followersCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(),FansActivity.class);
-                startActivity(intent);
+                User user = PublicApplication.getCurrentUser();
+                Long fanNum = user.getFanNum();
+                if (fanNum==0){
+                    Toast.makeText(getParentFragment().getActivity(), "没有粉丝", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent intent = new Intent(getContext(),FansActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

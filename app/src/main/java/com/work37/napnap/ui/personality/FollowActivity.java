@@ -38,7 +38,6 @@ public class FollowActivity extends PublicActivity {
     private RecyclerView recyclerView;
     private ImageButton backButton;
     private ImageView emptyView;
-
     private UserAdaptor userAdaptor;
     private ActivityFollowBinding binding;
     private List<User> collectedUserList;
@@ -54,7 +53,6 @@ public class FollowActivity extends PublicActivity {
         setContentView(R.layout.activity_follow);
 
         binding = ActivityFollowBinding.inflate(getLayoutInflater());
-
         recyclerView = binding.recyclerView;
         backButton = binding.backButton;
         emptyView = binding.emptyView;
@@ -152,7 +150,6 @@ public class FollowActivity extends PublicActivity {
                     List<User> records = userResponse.getData().getRecords();
 
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        collectedUserList.addAll(records);
                         if(collectedUserList.isEmpty()){
                             emptyView.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
@@ -160,6 +157,7 @@ public class FollowActivity extends PublicActivity {
                             emptyView.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
                         }
+                        collectedUserList.addAll(records);
                         userAdaptor.notifyDataSetChanged();
                         isLoading = false;
                         if (records.size() < pageSize) {

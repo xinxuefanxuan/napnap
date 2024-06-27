@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.userlogin_register.RegisterActivity"
     android:background="@drawable/my_napnap"
+    android:paddingTop="?attr/actionBarSize"
+
     >
 
     <!-- Back Button -->

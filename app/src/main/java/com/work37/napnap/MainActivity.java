@@ -61,15 +61,12 @@ public class MainActivity extends PublicActivity {
     private LoginViewModel loginViewModel;
     private boolean sendToken;
 
-    private SseClient sseClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        sseClient = new SseClient(getApplicationContext());
-        sseClient.start();
         initBottomNavigation();
         loginViewModel = new ViewModelProvider(this,new LoginViewModelFactory(getApplicationContext()))
                 .get(LoginViewModel.class);
@@ -81,7 +78,7 @@ public class MainActivity extends PublicActivity {
 
 
         // 获取并显示 FCM 令牌
-        getAndDisplayFcmToken();
+//        getAndDisplayFcmToken();
 
     }
 
