@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.work37.napnap.global.UrlConstant;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,64 +153,72 @@ public class GameListFragment extends Fragment {
 
         // Create Retrofit instance
         new Thread(()->{
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(new PersistentCookieJar(getContext()))
-                    .build();
-
-            //创建请求
-            GameRequest gameRequest = new GameRequest();
-            gameRequest.setCurrent(currentPage);
-            gameRequest.setPageSize(pageSize);
-            gameRequest.setSearchText("");
-            String sortField = type.equals("热门榜")?"download":"score";
-            gameRequest.setSortField(sortField);
-            gameRequest.setTagList(new ArrayList<>());
-
-            //将请求对象转换为JSON字符串
-            Gson gson = new Gson();
-            String json = gson.toJson(gameRequest);
-
-            //创建请求体
-            RequestBody requestBody = RequestBody.create(
-                    json,
-                    MediaType.get("application/json; charset=utf-8")
-            );
-            Request request = new Request.Builder()
-                    .url(UrlConstant.baseUrl+"api/game/listAllGameBySearch")
-                    .post(requestBody)
-                    .build();
-
-            //执行请求
-            Response response = null;
-            String responseBody = null;
             try {
-                response = okHttpClient.newCall(request).execute();
-                responseBody = response.body().string();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .cookieJar(new PersistentCookieJar(getContext()))
+                        .build();
 
-            //执行响应
-            GameResponse gameResponse = gson.fromJson(responseBody, GameResponse.class);
+                //创建请求
+                GameRequest gameRequest = new GameRequest();
+                gameRequest.setCurrent(currentPage);
+                gameRequest.setPageSize(pageSize);
+                gameRequest.setSearchText("");
+                String sortField = type.equals("热门榜")?"download":"score";
+                gameRequest.setSortField(sortField);
+                gameRequest.setTagList(new ArrayList<>());
 
-            //处理响应数据
-            if (gameResponse.getCode() == 0) {
-                List<Game> records = gameResponse.getData().getRecords();
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    gameList.addAll(records);
-                    gameAdaptor.notifyDataSetChanged();
+                //将请求对象转换为JSON字符串
+                Gson gson = new Gson();
+                String json = gson.toJson(gameRequest);
 
-                    isLoading = false;
-                    progressBar.setVisibility(View.GONE);
+                //创建请求体
+                RequestBody requestBody = RequestBody.create(
+                        json,
+                        MediaType.get("application/json; charset=utf-8")
+                );
+                Request request = new Request.Builder()
+                        .url(UrlConstant.baseUrl+"api/game/listAllGameBySearch")
+                        .post(requestBody)
+                        .build();
 
-                    if (records.size() < pageSize) {
-                        isLastPage = true;
-                    } else {
+                //执行请求
+                Response response = null;
+                String responseBody = null;
+                try {
+                    response = okHttpClient.newCall(request).execute();
+                    responseBody = response.body().string();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                //执行响应
+                GameResponse gameResponse = gson.fromJson(responseBody, GameResponse.class);
+
+                //处理响应数据
+                if (gameResponse.getCode() == 0) {
+                    List<Game> records = gameResponse.getData().getRecords();
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        gameList.addAll(records);
+                        gameAdaptor.notifyDataSetChanged();
+
                         isLoading = false;
-                    }
-                });
+                        progressBar.setVisibility(View.GONE);
+
+                        if (records.size() < pageSize) {
+                            isLastPage = true;
+                        } else {
+                            isLoading = false;
+                        }
+                    });
+                }
+            }catch (Exception e) {
+                Log.e("TAG", "Exception: " + e.getMessage());
             }
+
         }).start();
     }
+//    private void retryFetchGameData() {
+//        new Handler(Looper.getMainLooper()).postDelayed(this::fetchGameData, 3000);
+//    }
 }
 
