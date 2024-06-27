@@ -119,7 +119,6 @@ public class PostDetailActivity extends PublicActivity {
         list = new ArrayList<>();
         //获取post对象
         Post post = (Post) getIntent().getSerializableExtra("Post");
-
         Long userId = post.getUserId();
         Long postId = post.getId();
         String title = post.getTitle();
@@ -146,7 +145,6 @@ public class PostDetailActivity extends PublicActivity {
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
         commentInput = findViewById(R.id.commentInput);
         progressBar = binding.progressBar;
-//        galleryButton = findViewById(R.id.galleryButton);
 
         PostDetailActivity.this.runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
 

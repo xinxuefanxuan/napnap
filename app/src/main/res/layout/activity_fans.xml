@@ -12,7 +12,7 @@
         android:id="@+id/cardview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="32dp"
+        android:layout_margin="48dp"
         android:alpha="0.8"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp">

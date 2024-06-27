@@ -150,16 +150,8 @@ public class FollowActivity extends PublicActivity {
 
                 if (userResponse.getCode() == 0) {
                     List<User> records = userResponse.getData().getRecords();
-
                     new Handler(Looper.getMainLooper()).post(() -> {
                         collectedUserList.addAll(records);
-                        if(collectedUserList.isEmpty()){
-                            emptyView.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }else{
-                            emptyView.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                        }
                         userAdaptor.notifyDataSetChanged();
                         isLoading = false;
                         if (records.size() < pageSize) {

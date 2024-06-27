@@ -42,13 +42,10 @@ public class UserAdaptor extends RecyclerView.Adapter<UserAdaptor.ViewHolder> {
         User user = userList.get(position);
 
         Log.d("abcd",user.toString());
-
-        Log.d("abcdefg",user.getUserAvatar());
-        if(user.getUserAvatar().equals("null")||user.getUserAvatar()==null){
-            Glide.with(context)
+        Glide.with(context)
                     .load(user.getUserAvatar())
                     .into(holder.userAvatar);
-        }
+
 
         Glide.with(context)
                     .load(user.getUserAvatar())
