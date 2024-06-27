@@ -39,6 +39,7 @@ public class FansActivity extends PublicActivity {
     private ActivityFansBinding activityFansBinding;
     private RecyclerView recyclerView;
     private UserAdaptor userAdaptor;
+    private ImageButton backButton;
     private List<User> collectedUserList;
     private ImageView emptyView;
     private boolean isLoading = false;
@@ -50,13 +51,13 @@ public class FansActivity extends PublicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collected_posts);
+        setContentView(R.layout.activity_fans);
 
         activityFansBinding = ActivityFansBinding.inflate(getLayoutInflater());
 
         emptyView = activityFansBinding.emptyView;
         recyclerView = activityFansBinding.recyclerView;
-        ImageButton backButton = activityFansBinding.backButton;
+        backButton = activityFansBinding.backButton;
 
         // Set up back button
         backButton.setOnClickListener(v -> finish());
@@ -164,16 +165,13 @@ public class FansActivity extends PublicActivity {
                         }
 
                         // 控制空视图的可见性
-                        if (collectedUserList.isEmpty()) {
+                        if (collectedUserList==null|| collectedUserList.isEmpty()) {
                             recyclerView.setVisibility(View.GONE);
                             emptyView.setVisibility(View.VISIBLE);
                         } else {
                             recyclerView.setVisibility(View.VISIBLE);
                             emptyView.setVisibility(View.GONE);
                         }
-                        Log.d("FetchPosts", "collectedUserList size: " + collectedUserList.size());
-                        Log.d("FetchPosts", "emptyView visibility: " + emptyView.getVisibility());
-                        Log.d("FetchPosts", "recyclerView visibility: " + recyclerView.getVisibility());
 
                     });
                 }

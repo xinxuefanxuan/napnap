@@ -89,7 +89,7 @@ public class PersonalityFragment extends Fragment {
             }
             // 确保在 UI 线程中进行 Glide 加载操作
             new Handler(Looper.getMainLooper()).post(() -> {
-                binding.userAvatar.setRoundedImage(user.getUserAvatar(),40,1, R.color.red);
+                binding.userAvatar.setRoundedImage(user.getUserAvatar(),20,5, R.color.red);
             });
             binding.btnCollectionApp.setEnabled(true);
             binding.btnCollectionPost.setEnabled(true);

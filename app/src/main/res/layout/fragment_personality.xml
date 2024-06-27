@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.personality.PersonalityFragment">
+    tools:context=".ui.personality.PersonalityFragment"
+    android:background="@color/background_light">
 
     <!-- 用户头像 -->
     <com.work37.napnap.global.RoundedImageView
@@ -18,7 +19,7 @@
         android:layout_margin="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="User Avatar"/>
+        android:contentDescription="User Avatar" />
 
     <TextView
         android:id="@+id/click_to_login"
@@ -71,7 +72,8 @@
         app:layout_constraintTop_toTopOf="@id/user_avatar"
         app:layout_constraintBottom_toBottomOf="@id/user_avatar"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp"
+        style="@style/CustomButton"/>
 
     <!-- 获赞数，收藏数，关注数，粉丝数 -->
     <LinearLayout
@@ -120,7 +122,9 @@
             android:layout_columnWeight="1"
             android:drawableStart="@drawable/mypost"
             android:text="发布帖子"
-            android:backgroundTint="@android:color/holo_blue_light"
+
+            style="@style/CustomButton"
+            android:backgroundTint="@color/button_blue"
             android:textColor="@android:color/white"
             android:layout_margin="8dp"/>
 
@@ -131,7 +135,8 @@
             android:layout_columnWeight="1"
             android:drawableStart="@drawable/collectpost"
             android:text="收藏帖子"
-            android:backgroundTint="@android:color/holo_green_light"
+            style="@style/CustomButton"
+            android:backgroundTint="@color/button_green"
             android:textColor="@android:color/white"
             android:layout_margin="8dp"/>
 
@@ -142,7 +147,8 @@
             android:layout_columnWeight="1"
             android:drawableStart="@drawable/collectapp"
             android:text="收藏App"
-            android:backgroundTint="@android:color/holo_orange_light"
+            style="@style/CustomButton"
+            android:backgroundTint="@color/button_orange"
             android:textColor="@android:color/white"
             android:layout_margin="8dp"/>
 
@@ -153,7 +159,8 @@
             android:layout_columnWeight="1"
             android:drawableStart="@drawable/changepassword"
             android:text="修改密码"
-            android:backgroundTint="@android:color/holo_red_light"
+            style="@style/CustomButton"
+            android:backgroundTint="@color/button_red"
             android:textColor="@android:color/white"
             android:layout_margin="8dp"/>
 
@@ -164,12 +171,9 @@
             android:layout_columnWeight="1"
             android:drawableStart="@drawable/logout"
             android:text="退出登录"
-            android:backgroundTint="@android:color/holo_purple"
+            style="@style/CustomButton"
+            android:backgroundTint="@color/button_purple"
             android:textColor="@android:color/white"
             android:layout_margin="8dp"/>
     </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-

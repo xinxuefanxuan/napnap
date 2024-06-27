@@ -31,4 +31,15 @@
 
 
     <color name="colorPrimaryDark">#3700B3</color>
+
+
+
+        <color name="background_light">#F5F5F5</color>
+        <color name="button_blue">#80CFFA</color>
+        <color name="button_green">#98FB98</color>
+        <color name="button_orange">#FFD580</color>
+        <color name="button_red">#FF7F7F</color>
+        <color name="button_purple">#DDA0DD</color>
+
+
 </resources>

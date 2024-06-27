@@ -43,10 +43,11 @@ public class UserAdaptor extends RecyclerView.Adapter<UserAdaptor.ViewHolder> {
 
         Log.d("abcd",user.toString());
 
-        // Load user avatar (assuming you have a URL or resource)
         Glide.with(context)
-                .load(user.getUserAvatar())
-                .into(holder.userAvatar);
+                    .load(user.getUserAvatar())
+                    .into(holder.userAvatar);
+
+
 
         // Set user name, followers, and following
         holder.userName.setText(user.getUserName());

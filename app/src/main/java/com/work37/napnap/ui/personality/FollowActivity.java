@@ -51,7 +51,7 @@ public class FollowActivity extends PublicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collected_posts);
+        setContentView(R.layout.activity_follow);
 
         binding = ActivityFollowBinding.inflate(getLayoutInflater());
 
@@ -116,7 +116,6 @@ public class FollowActivity extends PublicActivity {
 
     private void fetchCollectedPosts() throws IOException, JSONException {
         isLoading = true;
-
         new Thread(() -> {
             try {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
