@@ -37,6 +37,8 @@ android {
 
 dependencies {
 
+    implementation(platform("com.google.firebase:firebase-bom:32.0.0")) // Firebase BOM
+    implementation("com.google.firebase:firebase-messaging") // FCM dependency
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -53,6 +55,7 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("org.json:json:20210307")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.activity)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation("cn.hutool:hutool-all:5.8.28")
     implementation ("androidx.core:core:1.10.1")
