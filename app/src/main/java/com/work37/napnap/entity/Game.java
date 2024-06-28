@@ -47,6 +47,8 @@ public class Game implements Serializable {
      */
     private Long downloadNum;
 
+    private List<String> gameUrls;
+
     public Game() {
     }
 
@@ -63,6 +65,14 @@ public class Game implements Serializable {
         this.gameNum = gameNum;
         this.collectNum = collectNum;
         this.downloadNum = downloadNum;
+    }
+
+    public List<String> getGameUrls() {
+        return gameUrls;
+    }
+
+    public void setGameUrls(List<String> gameUrls) {
+        this.gameUrls = gameUrls;
     }
 
     public Long getId() {

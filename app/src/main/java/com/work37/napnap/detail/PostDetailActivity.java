@@ -178,7 +178,6 @@ public class PostDetailActivity extends PublicActivity {
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         commentAdapter = new CommentAdapter(list, PostDetailActivity.this);
         commentsRecyclerView.setAdapter(commentAdapter);
-
             //将一些开始就可以初始化的初始化
             postTitle.setText(title);
             postContent.setText(content);
@@ -198,8 +197,8 @@ public class PostDetailActivity extends PublicActivity {
                 ImagePagerAdapter adapter = new ImagePagerAdapter(this, imageUrls);
                 viewPager.setAdapter(adapter);
                 tabLayout.setupWithViewPager(viewPager, true);
-
                 setupAutoSlide(imageUrls.size());
+
             }
 
 
@@ -261,7 +260,7 @@ public class PostDetailActivity extends PublicActivity {
 
 
         // Handle back button
-        findViewById(R.id.backButton).setOnClickListener(v -> finish());
+//        findViewById(R.id.backButton).setOnClickListener(v -> finish());
 
         // Handle follow button click
         //followButton.setOnClickListener(v -> followUser());
@@ -279,7 +278,7 @@ public class PostDetailActivity extends PublicActivity {
     private void setupAutoSlide(int count) {
         runnable = new Runnable() {
             public void run() {
-                if (picturePage == count) {
+                if (picturePage >= count) {
                     currentPage = 0;
                 }
                 viewPager.setCurrentItem(picturePage++, true);
@@ -324,6 +323,8 @@ public class PostDetailActivity extends PublicActivity {
         String imageUrl = "http://yourserver.com/path/to/image.jpg"; // 假设这是上传后的 URL
         commentInput.append(imageUrl);
     }
+
+    // 更新箭头可见性的方法
 
 
     private void loadComments(Long postId) {

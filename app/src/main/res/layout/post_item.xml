@@ -71,7 +71,7 @@
         android:text="Post Title"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#333333"
+        android:textColor="#444444"
         android:paddingBottom="4dp" />
 
     <!-- 正文内容 -->

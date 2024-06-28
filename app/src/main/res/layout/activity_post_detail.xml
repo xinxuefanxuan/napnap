@@ -43,23 +43,23 @@
         android:gravity="center_vertical"
         android:paddingBottom="8dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:alpha="0.8"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="8dp">
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:id="@+id/cardview"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="32dp"-->
+<!--            android:alpha="0.8"-->
+<!--            app:cardCornerRadius="20dp"-->
+<!--            app:cardElevation="8dp">-->
 
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="centerCrop"
-                android:src="@drawable/backbutton" />
-        </androidx.cardview.widget.CardView>
+<!--            <ImageButton-->
+<!--                android:id="@+id/backButton"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/backbutton" />-->
+<!--        </androidx.cardview.widget.CardView>-->
 
         <ImageView
             android:id="@+id/userAvatar"
@@ -92,15 +92,16 @@
         android:layout_height="200dp"
         android:layout_marginBottom="8dp" />
 
-    <!-- Post title -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_gravity="center_horizontal"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
         app:tabMode="fixed" />
+
+
 
     <TextView
         android:id="@+id/postTitle"
