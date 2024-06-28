@@ -33,7 +33,7 @@ public class Game implements Serializable {
     /**
      * 游戏链接
      */
-    private String gameUrl;
+    private List<String> gameUrl;
     /**
      * 评分数
      */
@@ -51,7 +51,7 @@ public class Game implements Serializable {
     }
 
     public Game(Long id, String gameName, String gameProfile, String gameIcon, List<String> tag,
-                BigDecimal gameScore, BigDecimal gameSize, String gameUrl, Long gameNum, Long collectNum, Long downloadNum) {
+                BigDecimal gameScore, BigDecimal gameSize, List<String> gameUrl, Long gameNum, Long collectNum, Long downloadNum) {
         this.id = id;
         this.gameName = gameName;
         this.gameProfile = gameProfile;
@@ -121,11 +121,11 @@ public class Game implements Serializable {
         this.gameSize = gameSize;
     }
 
-    public String getGameUrl() {
+    public List<String> getGameUrl() {
         return gameUrl;
     }
 
-    public void setGameUrl(String gameUrl) {
+    public void setGameUrl(List<String> gameUrl) {
         this.gameUrl = gameUrl;
     }
 
@@ -160,10 +160,10 @@ public class Game implements Serializable {
                 ", gameName='" + gameName + '\'' +
                 ", gameProfile='" + gameProfile + '\'' +
                 ", gameIcon='" + gameIcon + '\'' +
-                ", tag='" + tag + '\'' +
+                ", tag=" + tag +
                 ", gameScore=" + gameScore +
                 ", gameSize=" + gameSize +
-                ", gameUrl='" + gameUrl + '\'' +
+                ", gameUrl=" + gameUrl +
                 ", gameNum=" + gameNum +
                 ", collectNum=" + collectNum +
                 ", downloadNum=" + downloadNum +

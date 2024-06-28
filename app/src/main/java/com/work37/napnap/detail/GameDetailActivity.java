@@ -3,6 +3,8 @@ package com.work37.napnap.detail;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.bumptech.glide.Glide;
+import com.work37.napnap.Adaptor.GamePicsShowAdapter;
+import com.work37.napnap.Adaptor.ZoomOutPageTransformer;
 import com.work37.napnap.R;
 import com.work37.napnap.entity.Game;
 import com.work37.napnap.global.PersistentCookieJar;
@@ -23,7 +29,11 @@ import com.work37.napnap.global.UrlConstant;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.MediaType;
@@ -37,6 +47,11 @@ public class GameDetailActivity extends PublicActivity {
     private TextView gameScore;
     private TextView gameFavorites;
     private Button likeButton;
+
+    private ViewPager2 viewPager;
+    private Handler handler;
+    private Runnable update;
+    private Timer timer;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -68,6 +83,12 @@ public class GameDetailActivity extends PublicActivity {
         // 收藏按钮
         likeButton.setOnClickListener(v -> collectGame(game));
 
+        List<String> imageUrls = Arrays.asList(
+                "https://gitee.com/Code_for_love/napnapimages/raw/master/-8121337892351316872Fk3uE9jOqWhfRYwRYW0THBBneoWg.jpg",
+                "https://gitee.com/Code_for_love/napnapimages/raw/master/-8874512923856961981FkbYctFTuy134mkzunaZy1EhKPht.webp",
+                "https://gitee.com/Code_for_love/napnapimages/raw/master/-7454878004196576211Fk-RFGON_479RSFcb-tYPiun5WBE.webp"
+        );
+
         if (game != null) {
             // Load game icon
             Glide.with(this).load(game.getGameIcon()).into(gameIcon);
@@ -81,8 +102,36 @@ public class GameDetailActivity extends PublicActivity {
             gameFavorites.setText("收藏: " + game.getCollectNum());
             gameDescription.setText(game.getGameProfile());
             download.setText(game.getGameSize() + "KB");
+
+            if (!game.getGameUrl().isEmpty()){
+                imageUrls = new ArrayList<>(game.getGameUrl());
+            }
+
+        }
+
+        viewPager = findViewById(R.id.picsShower);
+
+
+        GamePicsShowAdapter adapter = new GamePicsShowAdapter(imageUrls);
+        viewPager.setAdapter(adapter);
+        viewPager.setPageTransformer(new ZoomOutPageTransformer());
+
+
+
+
+
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
         }
     }
+
+
 
     private void updateLikeButton() {
         if (collected) {
