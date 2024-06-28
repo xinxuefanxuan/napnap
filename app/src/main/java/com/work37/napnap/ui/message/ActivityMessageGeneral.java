@@ -2,6 +2,8 @@ package com.work37.napnap.ui.message;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +22,7 @@ public class ActivityMessageGeneral extends AppCompatActivity {
 
     private TabLayout homeTab;
     private ViewPager2 homePager;
+    private ImageButton btn_back;
 
     private String[] tabs;
     private String messageClass;
@@ -35,6 +38,9 @@ public class ActivityMessageGeneral extends AppCompatActivity {
 
         homeTab = this.findViewById(R.id.home_tab);
         homePager = this.findViewById(R.id.home_pager);
+        btn_back = this.findViewById(R.id.btn_back);
+
+        btn_back.setOnClickListener(v -> finish());
 
         tabs = new String[2];
         tabs[0] = new String("未读");

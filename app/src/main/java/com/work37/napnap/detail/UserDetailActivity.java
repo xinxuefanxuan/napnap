@@ -3,6 +3,7 @@ package com.work37.napnap.detail;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class UserDetailActivity extends PublicActivity {
     private Button followButton;
     private RecyclerView recyclerView;
     private Button tabPosts, tabApps, tabArticles;
+    private ImageButton backButton;
     private User user;
     private boolean isFollowing;
 
@@ -77,6 +79,9 @@ public class UserDetailActivity extends PublicActivity {
         tabPosts = binding.tabPosts;
         tabApps = binding.tabApps;
         tabArticles = binding.tabArticles;
+        backButton = binding.backButton;
+
+        backButton.setOnClickListener(v->finish());
 
         // Get user data from intent
         user = (User) getIntent().getSerializableExtra("User");
@@ -142,6 +147,12 @@ public class UserDetailActivity extends PublicActivity {
         recyclerView.setAdapter(postAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadPosts(user);  // 初始加载动态的内容
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         // Add scroll listener for pagination
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -212,7 +223,9 @@ public class UserDetailActivity extends PublicActivity {
                 boolean data = jsonObject.getBoolean("data");
                 if (code == 0) {
                     isFollowing = data;
-                    updateFollowButton();
+                    runOnUiThread(()->{
+                        updateFollowButton();
+                    });
                 } else {
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();

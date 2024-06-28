@@ -88,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 this,
                 0,
                 intent,
-                PendingIntent.FLAG_ONE_SHOT
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
         );
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)

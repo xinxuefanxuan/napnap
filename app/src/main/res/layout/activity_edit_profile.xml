@@ -22,12 +22,25 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/baseline_arrow_back_ios_24"
+                android:contentDescription="@string/back"
+                android:scaleType="centerCrop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="更改个人信息"
+                android:text="我的资料"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
                 android:gravity="center"/>
@@ -43,26 +56,26 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="48dp"
-        android:alpha="0.8"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp">
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:id="@+id/cardview"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginLeft="32dp"-->
+<!--        android:layout_marginTop="48dp"-->
+<!--        android:alpha="0.8"-->
+<!--        app:cardCornerRadius="20dp"-->
+<!--        app:cardElevation="8dp">-->
 
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/backbutton"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
-    </androidx.cardview.widget.CardView>
+<!--        <ImageButton-->
+<!--            android:id="@+id/back_button"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/backbutton"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            android:background="?attr/selectableItemBackgroundBorderless" />-->
+<!--    </androidx.cardview.widget.CardView>-->
 <!--    &lt;!&ndash; 后退按钮 &ndash;&gt;-->
 <!--    <ImageView-->
 <!--        android:id="@+id/back_button"-->
@@ -76,15 +89,7 @@
 <!--        android:clickable="true"-->
 <!--        android:focusable="true" />-->
 
-    <!-- 编辑按钮 -->
-    <Button
-        android:id="@+id/edit_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="编辑"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp" />
+
 
     <!-- 用户头像 -->
     <ImageView
@@ -93,7 +98,6 @@
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
-        android:layout_below="@+id/cardview"
         android:src="@drawable/baseline_person_24"
         android:scaleType="centerCrop" />
 
@@ -142,6 +146,16 @@
         android:layout_below="@id/user_bio"
         android:layout_marginTop="8dp"
          />
+
+    <!-- 编辑按钮 -->
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="编辑"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="16dp" />
 </RelativeLayout>
 
 </LinearLayout>
