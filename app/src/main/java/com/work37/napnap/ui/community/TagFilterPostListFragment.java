@@ -43,7 +43,7 @@ public class TagFilterPostListFragment extends Fragment {
     private List<Post> postList;
     private boolean isLoading = false;
     private int currentPage = 1;
-    private int pageSize = 10;
+    private int pageSize = 5;
     private boolean isLastPage = false;
 
     public static TagFilterPostListFragment newInstance(List<String> tags) {

@@ -34,7 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Comment Content"
-        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp" />
 

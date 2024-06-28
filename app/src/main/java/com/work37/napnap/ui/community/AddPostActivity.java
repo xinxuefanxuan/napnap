@@ -359,6 +359,7 @@ public class AddPostActivity extends PublicActivity {
                 if (code == 0) {
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), "上传动态成功", Toast.LENGTH_SHORT).show();
+                        finish();
                     });
                 } else {
                     runOnUiThread(() -> {

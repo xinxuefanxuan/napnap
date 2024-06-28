@@ -27,6 +27,7 @@ import com.work37.napnap.ui.userlogin_register.User;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -105,6 +106,9 @@ public class FragmentSearchUserList extends Fragment {
         new Thread(() -> {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .cookieJar(new PersistentCookieJar(getContext()))
+                    .connectTimeout(60, TimeUnit.SECONDS)  // 连接超时
+                    .writeTimeout(60, TimeUnit.SECONDS)    // 写入超时
+                    .readTimeout(60, TimeUnit.SECONDS)
                     .build();
 
             SearchRequest searchRequest = new SearchRequest();

@@ -51,14 +51,13 @@ public class FollowActivity extends PublicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_follow);
 
         binding = ActivityFollowBinding.inflate(getLayoutInflater());
 
         recyclerView = binding.recyclerView;
         backButton = binding.backButton;
         emptyView = binding.emptyView;
-
+        setContentView(binding.getRoot());
         // Set up back button
         backButton.setOnClickListener(v -> finish());
 
@@ -152,6 +151,11 @@ public class FollowActivity extends PublicActivity {
                     List<User> records = userResponse.getData().getRecords();
                     new Handler(Looper.getMainLooper()).post(() -> {
                         collectedUserList.addAll(records);
+                        if(collectedUserList.isEmpty()){
+                            emptyView.setVisibility(View.VISIBLE);
+                        }else{
+                            emptyView.setVisibility(View.GONE);
+                        }
                         userAdaptor.notifyDataSetChanged();
                         isLoading = false;
                         if (records.size() < pageSize) {

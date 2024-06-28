@@ -51,7 +51,6 @@ public class FansActivity extends PublicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fans);
 
         activityFansBinding = ActivityFansBinding.inflate(getLayoutInflater());
 
@@ -59,6 +58,7 @@ public class FansActivity extends PublicActivity {
         recyclerView = activityFansBinding.recyclerView;
         backButton = activityFansBinding.backButton;
 
+        setContentView(activityFansBinding.getRoot());
         // Set up back button
         backButton.setOnClickListener(v -> finish());
 

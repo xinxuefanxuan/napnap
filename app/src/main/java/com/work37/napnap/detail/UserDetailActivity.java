@@ -45,6 +45,7 @@ public class UserDetailActivity extends PublicActivity {
     private Button followButton;
     private RecyclerView recyclerView;
     private Button tabPosts, tabApps, tabArticles;
+    private ImageView backButton;
     private User user;
     private boolean isFollowing;
 
@@ -52,6 +53,7 @@ public class UserDetailActivity extends PublicActivity {
 
     private PostAdaptor postAdapter;
     private GameAdaptor gameAdapter;
+    private PostAdaptor postAdaptor1;
     private List<Post> postList = new ArrayList<>();
     private List<Game> gameList = new ArrayList<>();
     private List<Post> myPostList = new ArrayList<>();
@@ -77,6 +79,9 @@ public class UserDetailActivity extends PublicActivity {
         tabPosts = binding.tabPosts;
         tabApps = binding.tabApps;
         tabArticles = binding.tabArticles;
+        backButton = binding.backButton;
+
+        backButton.setOnClickListener(v->finish());
 
         // Get user data from intent
         user = (User) getIntent().getSerializableExtra("User");
@@ -131,7 +136,7 @@ public class UserDetailActivity extends PublicActivity {
             currentPage = 1;
             hasMoreData = true; // 重置标志
             myPostList.clear();
-            recyclerView.setAdapter(postAdapter);
+            recyclerView.setAdapter(postAdaptor1);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             loadArticles(user);
         });
@@ -139,6 +144,7 @@ public class UserDetailActivity extends PublicActivity {
         // 初始化recycleview
         postAdapter = new PostAdaptor(getApplicationContext(), postList);
         gameAdapter = new GameAdaptor(getApplicationContext(), gameList);
+        postAdaptor1 = new PostAdaptor(getApplicationContext(),myPostList);
         recyclerView.setAdapter(postAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadPosts(user);  // 初始加载动态的内容
@@ -185,6 +191,11 @@ public class UserDetailActivity extends PublicActivity {
         }
     }
 
+    /**
+     * 检查是否关注
+     * @param user
+     * @return
+     */
     private boolean checkIfFollowing(User user) {
         Long uid = user.getId();
         new Thread(() -> {
@@ -212,7 +223,10 @@ public class UserDetailActivity extends PublicActivity {
                 boolean data = jsonObject.getBoolean("data");
                 if (code == 0) {
                     isFollowing = data;
-                    updateFollowButton();
+                    runOnUiThread(()->{
+                        updateFollowButton();
+                    });
+
                 } else {
                     runOnUiThread(() -> {
                         Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT).show();
@@ -234,6 +248,10 @@ public class UserDetailActivity extends PublicActivity {
         followButton.setText(isFollowing ? "已关注" : "关注");
     }
 
+    /**
+     * 关注用户
+     * @param user
+     */
     private void followUser(User user) {
         Long uid = user.getId();
         // 点击按钮关注用户
@@ -288,6 +306,10 @@ public class UserDetailActivity extends PublicActivity {
         }).start();
     }
 
+    /**
+     * 取消关注用户
+     * @param user
+     */
     private void unfollowUser(User user) {
         Long uid = user.getId();
         // 点击按钮关注用户
@@ -342,6 +364,10 @@ public class UserDetailActivity extends PublicActivity {
         }).start();
     }
 
+    /**
+     * 加载帖子内容
+     * @param user
+     */
     private void loadPosts(User user) {
         Long uid = user.getId();
         new Thread(() -> {
@@ -487,7 +513,7 @@ public class UserDetailActivity extends PublicActivity {
                     runOnUiThread(() -> {
                         currentPage++;
                         myPostList.addAll(newArticles);
-                        postAdapter.notifyDataSetChanged();
+                        postAdaptor1.notifyDataSetChanged();
                         isLoading = false;
                     });
                 } else {

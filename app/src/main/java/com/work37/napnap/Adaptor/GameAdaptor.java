@@ -56,15 +56,14 @@ public class GameAdaptor extends RecyclerView.Adapter<GameAdaptor.ViewHolder> {
         holder.appName.setText(gameName);
 
 
-        // Set game tags (assuming it's a comma-separated string)
+        // 设置标签
         List<String> tags = game.getTag(); // 假设返回的是字符串数组 ["冒险", "二次元"]
         String formattedTags = formatTags(tags); // 调用自定义方法格式化标签
         holder.appTags.setText(formattedTags);
 
-        // Set game score
+        // 设置评分
         holder.appScore.setText(String.valueOf(game.getGameScore()));
 
-        // Set click listener for check button
         holder.checkButton.setOnClickListener(v -> {
             // Implement download functionality here if needed
             Intent intent = new Intent(context, GameDetailActivity.class);
